@@ -48,6 +48,12 @@ public class RegistrarEvento {
     public int getCupoMax() {
         return cupoMax;
     }
+
+    @Override
+    public String toString() {
+        return "RegistrarEvento{" + "codigoDeEvento=" + codigoDeEvento + ", fechaDelEvento=" + fechaDelEvento + ", tipoDeEvento=" + tipoDeEvento + ", tituloDeEvento=" + tituloDeEvento + ", ubicacion=" + ubicacion + ", cupoMax=" + cupoMax + '}';
+    }
+    
     
     
 }

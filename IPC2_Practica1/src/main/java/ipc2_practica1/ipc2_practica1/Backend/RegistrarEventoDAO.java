@@ -11,30 +11,26 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 /**
  *
  * @author helder
  */
-public class RegistrarEventoDAO  extends ConexionBD{
-    private final Connection c;
-    private RegistrarEvento evento = null;
+public class RegistrarEventoDAO implements CRUD<RegistrarEvento>{
     private static final String INSERT_EVENTO = "INSERT INTO evento "
-            + "(codigo_de_evento, fecha_del_evento, tipo_de_evento, titulo_de_evento, ubicacion, cupo_max) "
-            + "values (?,?,?,?,?,?)";
+            + " (codigo_de_evento, fecha_del_evento, tipo_de_evento, titulo_de_evento, ubicacion, cupo_maximo) "
+            + " values (?,?,?,?,?,?);";
     private static final DateTimeFormatter FORMAT_DDMMYYYY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
-    public RegistrarEventoDAO() throws SQLException{
-        
-        super.conexion();
-        c = super.getConnection();
-        if (c == null) throw new SQLException("No se puedo conectar con la base de datos");
-    }
-    
     @Override
-    public void agregar () throws SQLException {
-        try (PreparedStatement stmt = c.prepareStatement(INSERT_EVENTO)) {
+    public void insetar(RegistrarEvento evento) throws SQLException {
+        ConexionBD conexion = new ConexionBD();
+        
+        try (Connection connection = conexion.conexion(); 
+                PreparedStatement stmt = connection.prepareStatement(INSERT_EVENTO)){
             stmt.setString(1, evento.getCodigoDeEvento());
+
             try {
                 LocalDate ld = LocalDate.parse(evento.getFechaDelEvento(), FORMAT_DDMMYYYY);
                 stmt.setDate(2, Date.valueOf(ld));
@@ -42,16 +38,47 @@ public class RegistrarEventoDAO  extends ConexionBD{
                 throw new SQLException("Formato de fecha inválido. Se esperaba dd/MM/yyyy. Valor: "
                         + evento.getFechaDelEvento(), ex);
             }
+
             stmt.setString(3, evento.getTipoDeEvento());
             stmt.setString(4, evento.getTituloDeEvento());
             stmt.setString(5, evento.getUbicacion());
             stmt.setInt(6, evento.getCupoMax());
+            
+            System.out.println("Ejecutando SQL: " + INSERT_EVENTO);
+            
+            int filasAfectadas = stmt.executeUpdate();
+            System.out.println("Filas insertadas: " + filasAfectadas);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062){
+                System.err.println("Llava primaria duplicada\n");
+            } else {
+                throw new SQLException("Error al intentar insertar el evento a la base: " + evento.toString() + e.getErrorCode());
+            }
         }
+        
+    }
+    
+    @Override
+    public void actualizar(RegistrarEvento entidad) throws SQLException {
+        
     }
 
-    public void setEvento(RegistrarEvento evento) {
-        this.evento = evento;
+    @Override
+    public RegistrarEvento leer() throws SQLException {
+        
+        return null;
+        
     }
-    
-    
+
+    @Override
+    public List<RegistrarEvento> listar() throws SQLException {
+        
+        return null;
+        
+    }
+
+    @Override
+    public void borrar() throws SQLException {
+        
+    }
 }
