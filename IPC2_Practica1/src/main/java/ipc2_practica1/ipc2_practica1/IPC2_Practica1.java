@@ -6,6 +6,7 @@ package ipc2_practica1.ipc2_practica1;
 import ipc2_practica1.ipc2_practica1.Backend.LecturaDeArchivos;
 import ipc2_practica1.ipc2_practica1.Backend.RegistrarEvento;
 import ipc2_practica1.ipc2_practica1.Backend.RegistrarEventoDAO;
+import ipc2_practica1.ipc2_practica1.Frontend.JFramePrincipal;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -19,8 +20,11 @@ public class IPC2_Practica1 {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-
-        int opcion;
+        
+        JFramePrincipal JFrame = new JFramePrincipal();
+        JFrame.inicio();
+        
+        /*int opcion;
         System.out.println("1. Formulario");
         System.out.println("2. Carga de archivo");
         opcion = Integer.parseInt(scanner.nextLine());
@@ -29,7 +33,7 @@ public class IPC2_Practica1 {
             case 1 -> formulario();
             case 2 -> cargarDeArchivo();
             default -> System.out.println("No ves que solo hay dos opciones :v");
-        }
+        }*/
 
     }
 
