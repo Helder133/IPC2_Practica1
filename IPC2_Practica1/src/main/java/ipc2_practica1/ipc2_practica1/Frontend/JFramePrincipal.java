@@ -11,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -91,6 +92,17 @@ public class JFramePrincipal extends JFrame{
         //Agragar el panel al JFrame al lado izquierdo 
         add(panelButtons, BorderLayout.WEST);
         
+        
+        JDesktopPane escritorio = new JDesktopPane();
+        escritorio.setBackground(Color.GRAY);
+        escritorio.setBounds(275, 100, 700, 550);
+        add(escritorio);
+        
+        buttonEvento.addActionListener(e -> {
+            EventoFrame base = new EventoFrame();
+            base.agregarVentanillaEvento(escritorio, 20, 20);
+            base.agregarComponentes();
+        });
         /*//Creando la barra de menú
         JMenuBar barraMenu = new JMenuBar();
         //Crear menús
