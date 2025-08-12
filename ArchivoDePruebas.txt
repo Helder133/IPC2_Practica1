@@ -1,6 +1,7 @@
-REGISTRO_EVENTO("EVT-015","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150e);
-REGISTRO_EVENTO("EVT-013","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);
-REGISTRO_EVENTO("EVT-017","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150r);
-REGISTRO_EVENTO("EVT-018","25/08/2025","CHARLAa","Tecnología Sheikah","Auditorio Central",150);
-REGISTRO_EVENTO("EVT-019","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);
-REGISTRO_EVENTO("EVT-020","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);
+REGISTRO_EVENTO("EVT-00000001","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);
+REGISTRO_EVENTO("EVT-00000002","25/08/2025","CHARLAA","Tecnología Sheikah","Auditorio Central",15f0);
+REGISTRO_EVENTO("EVT-00000003","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);
+REGISTRO_EVENTO("EVT-00000004","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);
+REGISTRO_EVENTO("EVT-00000005","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);
+REGISTRO_EVENTO("EVT-00000006","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);
+REGISTRO_EVENTO("EVT-00000007","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150);

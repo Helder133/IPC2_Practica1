@@ -51,6 +51,7 @@ public class RegistrarEventoDAO implements CRUD<RegistrarEvento>{
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062){
                 System.err.println("Llava primaria duplicada\n");
+                throw new SQLException("LLave primaria dupicada");
             } else {
                 throw new SQLException("Error al intentar insertar el evento a la base: " + evento.toString() + e.getErrorCode());
             }

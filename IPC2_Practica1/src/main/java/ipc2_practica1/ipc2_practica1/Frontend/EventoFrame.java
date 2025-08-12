@@ -5,11 +5,19 @@
 package ipc2_practica1.ipc2_practica1.Frontend;
 
 import com.toedter.calendar.JDateChooser;
+import ipc2_practica1.ipc2_practica1.Backend.ControladorEntreBackendYFrontend;
 import java.awt.Font;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -20,6 +28,9 @@ import javax.swing.SpinnerNumberModel;
  */
 public class EventoFrame extends FrameBase {
 
+    private static final int LARGO = 150;
+    private static final int ANCHO = 20;
+    private final ControladorEntreBackendYFrontend controlador = new ControladorEntreBackendYFrontend();
     private JInternalFrame frameEvento;
 
     public void agregarVentanillaEvento(JDesktopPane jframe, int x, int y) {
@@ -30,104 +41,131 @@ public class EventoFrame extends FrameBase {
     public void agregarComponentes() {
         Font font1 = new Font("Showcard Gothic", Font.BOLD, 15);
         Font font2 = new Font("Helvetica", Font.ITALIC, 15);
-        
+
         JLabel codigoEvento = new JLabel("Codigo De Evento: ");
-        codigoEvento.setBounds(10, 50, 150, 20);
-        codigoEvento.setFont(font1);
+        setBonsJLabel(codigoEvento, 10, 50, LARGO, ANCHO, font1);
         frameEvento.add(codigoEvento);
-        
+
         JTextField textCodigo = new JTextField();
-        textCodigo.setBounds(190, 50, 150, 20);
-        textCodigo.setFont(font2);
-        //validarCargaArchivos(textCodigo);
+        setBonsJText(textCodigo, 190, 50, LARGO, ANCHO, font2);
         frameEvento.add(textCodigo);
-        
-        JLabel fechaEvento = new JLabel ("Fecha del evento: ");
-        fechaEvento.setBounds(10, 90, 150, 20);
-        fechaEvento.setFont(font1);
+
+        JLabel fechaEvento = new JLabel("Fecha del evento: ");
+        setBonsJLabel(fechaEvento, 10, 90, LARGO, ANCHO, font1);
         frameEvento.add(fechaEvento);
-        
+
         JDateChooser eventoFecha = new JDateChooser();
-        eventoFecha.setFont(font2);
-        eventoFecha.setDateFormatString("dd/MM/yyyy");
-        eventoFecha.setBounds(190, 90, 150, 20);
-        //validarCargaArchivos1(eventoFecha);
+        setBonsJDate(eventoFecha, 190, 90, LARGO, ANCHO, font2);
         frameEvento.add(eventoFecha);
-        
+
         JLabel tipoEvento = new JLabel("Tipo De Evento: ");
-        tipoEvento.setBounds(10, 130, 150, 20);
-        tipoEvento.setFont(font1);
+        setBonsJLabel(tipoEvento, 10, 130, LARGO, ANCHO, font1);
         frameEvento.add(tipoEvento);
-        
-        String [] tipo = {"Seleccionar...","CHARLA", "CONGRESO", "TALLER", "DEBATE"};
-        
+
+        String[] tipo = {"Seleccionar...", "CHARLA", "CONGRESO", "TALLER", "DEBATE"};
+
         JComboBox<String> opciones = new JComboBox(tipo);
-        opciones.setBounds(190, 130, 150, 20);
-        opciones.setFont(font2);
-        //validarCargaArchivos2(opciones);
+        setBonsJComboBox(opciones, 190, 130, LARGO, ANCHO, font2);
         frameEvento.add(opciones);
         
-        
+
         JLabel tituloLabel = new JLabel("Titulo Del Evento: ");
-        tituloLabel.setBounds(10, 170, 150, 20);
-        tituloLabel.setFont(font1);
+        setBonsJLabel(tituloLabel, 10, 170, LARGO, ANCHO, font1);
         frameEvento.add(tituloLabel);
-        
+
         JTextField textTitulo = new JTextField();
-        textTitulo.setBounds(190, 170, 150, 20);
-        textTitulo.setFont(font2);
-        //validarCargaArchivos(textTitulo);
+        setBonsJText(textTitulo, 190, 170, LARGO, ANCHO, font2);
         frameEvento.add(textTitulo);
         
+
         JLabel ubicacionJLabel = new JLabel("Ubicación: ");
-        ubicacionJLabel.setBounds(10, 210, 150, 20);
-        ubicacionJLabel.setFont(font1);
+        setBonsJLabel(ubicacionJLabel, 10, 210, LARGO, ANCHO, font1);
         frameEvento.add(ubicacionJLabel);
-        
+
         JTextField textUbicacion = new JTextField();
-        textUbicacion.setBounds(190, 210, 150, 20);
-        textUbicacion.setFont(font2);
-        //validarCargaArchivos(textUbicacion);
+        setBonsJText(textUbicacion, 190, 210, LARGO, ANCHO, font2);
         frameEvento.add(textUbicacion);
         
+
         JLabel cupoMaxJLabel = new JLabel("Cupo Máximo: ");
-        cupoMaxJLabel.setBounds(10, 250, 150, 20);
-        cupoMaxJLabel.setFont(font1);
+        setBonsJLabel(cupoMaxJLabel, 10, 250, LARGO, ANCHO, font1);
         frameEvento.add(cupoMaxJLabel);
-        
-        SpinnerNumberModel cupoMax = new SpinnerNumberModel(0,0,1000,1);
+
+        SpinnerNumberModel cupoMax = new SpinnerNumberModel(0, 0, 1000, 1);
         JSpinner jspinnerCupoMax = new JSpinner(cupoMax);
-        jspinnerCupoMax.setBounds(190, 250, 150, 20);
-        jspinnerCupoMax.setFont(font2);
-        //validarCargaArchivos3(jspinnerCupoMax);
+        setJSpinner(jspinnerCupoMax, 190, 250, LARGO, ANCHO, font2);
         frameEvento.add(jspinnerCupoMax);
+        
+
+        JButton enviarFormularioJButton = new JButton("Enviar Formulario");
+        setBonsJButton(enviarFormularioJButton, 25, 290, (LARGO + 50), ANCHO, font1);
+        frameEvento.add(enviarFormularioJButton);
+        enviarFormularioJButton.addActionListener(e -> {
+            try {
+                String codigo = textCodigo.getText();
+                Date fecha = eventoFecha.getDate();
+                String fechaStr = new SimpleDateFormat(eventoFecha.getDateFormatString()).format(fecha);
+                String opcionEvento = (String) opciones.getSelectedItem();
+                String titulo = textTitulo.getText();
+                String ubicacion = textUbicacion.getText();
+                int cupo = (int) jspinnerCupoMax.getValue();
+                
+                controlador.insetarFormularioEvento(codigo, fechaStr, opcionEvento, titulo, ubicacion, cupo);
+                JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Evento Guardado Exitosamente.</p></html>");
+                
+                textCodigo.setText("");
+                eventoFecha.setDate(null);
+                opciones.setSelectedIndex(0);
+                textTitulo.setText("");
+                textUbicacion.setText("");
+                jspinnerCupoMax.setValue(0);
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + ex.getMessage() + "\n Vuelva a intentar.</p></html>");
+            }
+        });
     }
-    
-    /*@Override
-    protected void validarCargaArchivos(JTextField text){
-        if (!super.path.equalsIgnoreCase("")) {
-            text.setEnabled(false);
-        }
-    }
-    
+
     @Override
-    protected void validarCargaArchivos1(JDateChooser fecha){
-        if (!super.path.equalsIgnoreCase("")) {
-            fecha.setEnabled(false);
-        }
+    protected void ejecutarInstruccionDeBoton() {
+        super.enviarArchivoJButton.addActionListener(e -> {
+            try {
+                controlador.insetarArchivoEvento(super.path);
+                JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Archivo Subido Exitosamente.</p></html>");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + ex.getMessage() + "\n Vuelva a intentar.</p></html>");
+            }
+        });
     }
-    
-    @Override
-    protected void validarCargaArchivos2(JComboBox<String> opciones){
-        if (!super.path.equalsIgnoreCase("")) {
-            opciones.setEnabled(false);
-        }
+
+    private void setBonsJButton(JButton jbutton, int x, int y, int z, int w, Font font) {
+        jbutton.setBounds(x, y, z, w);
+        jbutton.setFont(font);
     }
-    
-    @Override
-    protected void validarCargaArchivos3(JSpinner jspiner){
-        if (!super.path.equalsIgnoreCase("")) {
-            jspiner.setEnabled(false);
-        }
-    }*/
+
+    private void setBonsJLabel(JLabel jlabel, int x, int y, int z, int w, Font font) {
+        jlabel.setBounds(x, y, z, w);
+        jlabel.setFont(font);
+    }
+
+    private void setBonsJText(JTextField jtextfield, int x, int y, int z, int w, Font font) {
+        jtextfield.setBounds(x, y, z, w);
+        jtextfield.setFont(font);
+    }
+
+    private void setBonsJDate(JDateChooser deta, int x, int y, int z, int w, Font font) {
+        deta.setBounds(x, y, z, w);
+        deta.setFont(font);
+        deta.setDateFormatString("dd/MM/yyyy");
+    }
+
+    private void setBonsJComboBox(JComboBox<String> jcombobox, int x, int y, int z, int w, Font font) {
+        jcombobox.setBounds(x, y, z, w);
+        jcombobox.setFont(font);
+    }
+
+    private void setJSpinner(JSpinner jspinner, int x, int y, int z, int w, Font font) {
+        jspinner.setBounds(x, y, z, w);
+        jspinner.setFont(font);
+    }
 }

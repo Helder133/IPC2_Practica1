@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 public class FrameBase extends JInternalFrame {
 
     protected String path = "";
+    protected JButton enviarArchivoJButton;
 
     public JInternalFrame agragarVentanilla(JDesktopPane jframe, String titulo, int x, int y) {
         JInternalFrame ventana = new JInternalFrame(title, true, true, true, true);
@@ -44,7 +45,24 @@ public class FrameBase extends JInternalFrame {
         rutaArchivo.setFont(font2);
         rutaArchivo.setBounds(180, 10, 200, 20);
         frameEvento.add(rutaArchivo);
-
+        
+        enviarArchivoJButton = new JButton("Enviar Archivo");
+        enviarArchivoJButton.setBounds(250, 290, 200, 20);
+        enviarArchivoJButton.setEnabled(false);
+        frameEvento.add(enviarArchivoJButton);
+        enviarArchivoJButton.addActionListener(e -> {
+            ejecutarInstruccionDeBoton();
+        });
+        
+        JButton activarFormJButton = new JButton("Activar Form...");
+        activarFormJButton.setBounds(400, 10, 150, 20);
+        frameEvento.add(activarFormJButton);
+        activarFormJButton.addActionListener(e -> {
+            rutaArchivo.setText("Archivo Seleccionado...");
+            habilitarCampos(frameEvento.getContentPane());
+            enviarArchivoJButton.setEnabled(false);
+        });
+        
         JButton cargaArchivo = new JButton("Carga de archivos");
         cargaArchivo.setBounds(10, 10, 150, 20);
         frameEvento.add(cargaArchivo);
@@ -62,24 +80,22 @@ public class FrameBase extends JInternalFrame {
                 rutaArchivo.setText(nombreArchivo);
                 
                 deshabilitarCampos(frameEvento.getContentPane());
+                enviarArchivoJButton.setEnabled(true);
+                activarFormJButton.setEnabled(true);
             }
         });
         
-        JButton limpiarEntrada = new JButton("Limpiar...");
-        limpiarEntrada.setBounds(400, 10, 150, 20);
-        frameEvento.add(limpiarEntrada);
-        limpiarEntrada.addActionListener(e -> {
-            rutaArchivo.setText("Archivo Seleccionado...");
-            habilitarCampos(frameEvento.getContentPane());
-        });
     }
-
+    
+    protected void ejecutarInstruccionDeBoton(){}
+    
     private void deshabilitarCampos(Container container) {
         for (Component comp : container.getComponents()) {
             if (comp instanceof JTextField
                     || comp instanceof JComboBox
                     || comp instanceof JDateChooser
-                    || comp instanceof JSpinner) {
+                    || comp instanceof JSpinner
+                    || comp instanceof JButton) {
                 comp.setEnabled(false);
             } else if (comp instanceof Container container1) {
                 deshabilitarCampos(container1);
@@ -92,7 +108,8 @@ public class FrameBase extends JInternalFrame {
             if (comp instanceof JTextField
                     || comp instanceof JComboBox
                     || comp instanceof JDateChooser
-                    || comp instanceof JSpinner) {
+                    || comp instanceof JSpinner
+                    || comp instanceof JButton) {
                 comp.setEnabled(true);
             } else if (comp instanceof Container container1) {
                 habilitarCampos(container1);
