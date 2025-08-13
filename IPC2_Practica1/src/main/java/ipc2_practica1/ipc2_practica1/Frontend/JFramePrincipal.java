@@ -14,91 +14,94 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  *
  * @author helder
  */
-public class JFramePrincipal extends JFrame{
+public class JFramePrincipal extends JFrame {
+
     public void inicio() {
         setTitle("Administrador de eventos");
-        setLayout(null);
+        setLayout(new BorderLayout());
         setVisible(true);
         setResizable(false);
         getContentPane().setBackground(Color.DARK_GRAY);
         setDefaultCloseOperation(3);
-        setSize(1000,700);
+        setSize(1000, 700);
         setLocationRelativeTo(null);
-        
+
         Font font1 = new Font("Helvetica", Font.BOLD, 30);
-        
-        JLabel tituloJLabel = new JLabel("Administrador de eventos y actividades");
-        tituloJLabel.setLayout(null);
-        tituloJLabel.setVisible(true);
-        tituloJLabel.setForeground(Color.white);
-        tituloJLabel.setBounds(100, 20, 900, 60);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(Color.DARK_GRAY);
+        JLabel tituloJLabel = new JLabel("Administrador de eventos y actividades", SwingConstants.CENTER);
+        tituloJLabel.setForeground(Color.WHITE);
         tituloJLabel.setFont(font1);
-        add(tituloJLabel);
+        topPanel.add(tituloJLabel, BorderLayout.CENTER);
+        add(topPanel, BorderLayout.NORTH);
+
+        //Barra de menú
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.setBackground(Color.LIGHT_GRAY);
+        setJMenuBar(menuBar);
+
+        Font menuFont = new Font("Helvetica", Font.BOLD, 14);
+        Font menuItemFont = new Font("Helvetica", Font.PLAIN, 13);
         
-        //Agreando un panel para los botones
-        JPanel panelButtons = new JPanel();
-        panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.Y_AXIS));
-        panelButtons.setBackground(Color.GRAY);
-        panelButtons.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-        panelButtons.setBounds(25, 100, 225, 550);
-        
-        //Creando botones
-        JButton buttonEvento = new JButton("Registrar Evento");
-        JButton buttonParticipante = new JButton("Registrar Participante");
-        JButton buttonInscripcion = new JButton("Inscripción");
-        JButton buttonPago = new JButton("Pago");
-        JButton buttonValidarInscripcion = new JButton("validar Inscripción");
-        JButton buttonActividad = new JButton("Registrar Actividad");
-        JButton buttonAsistencia = new JButton("Registrar Asistencia");
-        JButton buttonCertificado = new JButton("Certidicado");
-        JButton buttonReportePaticipantes = new JButton("Reporte De Participantes");
-        JButton buttonReporteActividad = new JButton("Reporte De Actividades");
-        JButton buttonReporteEvento = new JButton("Reporte De Eventos");
-        
-        //Agragando los botones al panel
-        panelButtons.add(buttonEvento);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonParticipante);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonInscripcion);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonPago);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonValidarInscripcion);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonActividad);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonAsistencia);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonCertificado);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonReportePaticipantes);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonReporteActividad);
-        panelButtons.add(Box.createVerticalStrut(15));
-        panelButtons.add(buttonReporteEvento);
-        //Agragar el panel al JFrame al lado izquierdo 
-        add(panelButtons, BorderLayout.WEST);
-        
-        
+        // Menú "Registro"
+        JMenu menuRegistro = new JMenu("Registro"); 
+        menuRegistro.setFont(menuFont);
+        JMenuItem registrarEvento = new JMenuItem("Registrar Evento"); 
+        registrarEvento.setFont(menuItemFont);
+        JMenuItem registrarParticipante = new JMenuItem("Registrar Participante"); 
+        registrarParticipante.setFont(menuItemFont);
+        JMenuItem registrarActividad = new JMenuItem("Registrar Actividad"); 
+        registrarActividad.setFont(menuItemFont);
+
+        menuRegistro.add(registrarEvento);
+        menuRegistro.add(registrarParticipante);
+        menuRegistro.add(registrarActividad);
+
+        // Menú "Operaciones"
+        JMenu menuOperaciones = new JMenu("Operaciones");
+        JMenuItem inscripcion = new JMenuItem("Inscripción");
+        JMenuItem pago = new JMenuItem("Pago");
+        JMenuItem validarInscripcion = new JMenuItem("Validar Inscripción");
+
+        menuOperaciones.add(inscripcion);
+        menuOperaciones.add(pago);
+        menuOperaciones.add(validarInscripcion);
+
+        // Menú "Reportes"
+        JMenu menuReportes = new JMenu("Reportes");
+        JMenuItem repParticipantes = new JMenuItem("Reporte de Participantes");
+        JMenuItem repActividad = new JMenuItem("Reporte de Actividades");
+        JMenuItem repEvento = new JMenuItem("Reporte de Eventos");
+
+        menuReportes.add(repParticipantes);
+        menuReportes.add(repActividad);
+        menuReportes.add(repEvento);
+
+        // Agregar menús al menuBar
+        menuBar.add(menuRegistro);
+        menuBar.add(menuOperaciones);
+        menuBar.add(menuReportes);
+
         JDesktopPane escritorio = new JDesktopPane();
         escritorio.setBackground(Color.GRAY);
-        escritorio.setBounds(275, 100, 700, 550);
-        add(escritorio);
+        add(escritorio, BorderLayout.CENTER);
         
-        buttonEvento.addActionListener(e -> {
+        registrarEvento.addActionListener(e -> {
             EventoFrame base = new EventoFrame();
             base.agregarVentanillaEvento(escritorio, 20, 20);
             base.agregarComponentes();
         });
-        
-        
         
         repaint();
     }
