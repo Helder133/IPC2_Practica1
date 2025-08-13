@@ -63,3 +63,5 @@ CREATE TABLE IF NOT EXISTS asistencia (
 	CONSTRAINT fk_email_participante_5 FOREIGN KEY (email_participante) REFERENCES participante (email),
 	CONSTRAINT fk_codigo_de_actividad FOREIGN KEY (codigo_de_actividad) REFERENCES actividad (codigo_de_actividad)
 );
+
+ALTER TABLE evento MODIFY COLUMN costo_inscripcion DECIMAL(7,2) NOT NULL;

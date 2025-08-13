@@ -4,6 +4,7 @@
  */
 package ipc2_practica1.ipc2_practica1.Backend;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -19,8 +20,8 @@ import java.util.List;
  */
 public class RegistrarEventoDAO implements CRUD<RegistrarEvento>{
     private static final String INSERT_EVENTO = "INSERT INTO evento "
-            + " (codigo_de_evento, fecha_del_evento, tipo_de_evento, titulo_de_evento, ubicacion, cupo_maximo) "
-            + " values (?,?,?,?,?,?);";
+            + " (codigo_de_evento, fecha_del_evento, tipo_de_evento, titulo_de_evento, ubicacion, cupo_maximo, costo_inscripcion) "
+            + " values (?,?,?,?,?,?,?);";
     private static final DateTimeFormatter FORMAT_DDMMYYYY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
     @Override
@@ -43,6 +44,7 @@ public class RegistrarEventoDAO implements CRUD<RegistrarEvento>{
             stmt.setString(4, evento.getTituloDeEvento());
             stmt.setString(5, evento.getUbicacion());
             stmt.setInt(6, evento.getCupoMax());
+            stmt.setBigDecimal(7, evento.getCosto());
             
             System.out.println("Ejecutando SQL: " + INSERT_EVENTO);
             
@@ -50,9 +52,9 @@ public class RegistrarEventoDAO implements CRUD<RegistrarEvento>{
             System.out.println("Filas insertadas: " + filasAfectadas);
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062){
-                System.err.println("Llava primaria duplicada\n");
-                throw new SQLException("LLave primaria dupicada");
+                throw new SQLException("1062");
             } else {
+                e.printStackTrace();
                 throw new SQLException("Error al intentar insertar el evento a la base: " + evento.toString() + e.getErrorCode());
             }
         }

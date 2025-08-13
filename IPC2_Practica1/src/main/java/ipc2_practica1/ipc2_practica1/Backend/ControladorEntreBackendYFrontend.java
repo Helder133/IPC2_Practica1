@@ -5,6 +5,7 @@
 package ipc2_practica1.ipc2_practica1.Backend;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 /**
@@ -14,9 +15,9 @@ import java.sql.SQLException;
 public class ControladorEntreBackendYFrontend {
 
     public void insetarFormularioEvento(String codigo, String fecha,
-            String tipo, String titulo, String ubicacion, int max) throws SQLException {
+            String tipo, String titulo, String ubicacion, int max, BigDecimal costo) throws SQLException {
         try {
-            RegistrarEvento evento = new RegistrarEvento(codigo, fecha, tipo, titulo, ubicacion, max);
+            RegistrarEvento evento = new RegistrarEvento(codigo, fecha, tipo, titulo, ubicacion, max, costo);
             RegistrarEventoDAO eventoDAO = new RegistrarEventoDAO();
             eventoDAO.insetar(evento);
         } catch (SQLException e) {
@@ -24,13 +25,13 @@ public class ControladorEntreBackendYFrontend {
         }
     }
     
-    public void insetarArchivoEvento (String path) throws Exception {
+    public String[] insetarArchivoEvento (String path) throws IOException {
         try {
             LecturaDeArchivos lectura = new LecturaDeArchivos();
-            lectura.leerArchivoEvento(path);
-        } catch (IOException | SQLException e) {
-            throw new Exception("Error: " + e.getMessage());
+            return lectura.leerArchivoEvento(path);
+        } catch (IOException e) {
+            throw new IOException("Error: " + e.getMessage());
         }
     } 
-
+    
 }

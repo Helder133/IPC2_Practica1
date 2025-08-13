@@ -7,9 +7,12 @@ package ipc2_practica1.ipc2_practica1.Backend;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -17,7 +20,11 @@ import java.util.List;
  */
 public class LecturaDeArchivos {
 
-    public void leerArchivoEvento(String ruta) throws SQLException, IOException {
+    public String[] leerArchivoEvento(String ruta) throws IOException {
+        String[] resultado = {"", "", ""};
+        List<Integer> llaveDuplicada = new LinkedList<>();
+        List<Integer> errorDesconocido = new LinkedList<>();
+        List<Integer> columnaFaltante = new LinkedList<>();
         try {
             RegistrarEventoDAO nuevoEvento = new RegistrarEventoDAO();
             List<String> instruccionEvento = leerArchivo(ruta);
@@ -33,27 +40,32 @@ public class LecturaDeArchivos {
                     String tema = partes[3].replace("\"", "").trim();
                     String lugar = partes[4].replace("\"", "").trim();
                     int capacidad = Integer.parseInt(partes[5].trim());
-
-                    RegistrarEvento evento = new RegistrarEvento(codigo, fecha, tipo, tema, lugar, capacidad);
+                    BigDecimal costo = new BigDecimal(partes[6].trim());
+                    RegistrarEvento evento = new RegistrarEvento(codigo, fecha, tipo, tema, lugar, capacidad, costo);
 
                     nuevoEvento.insetar(evento);
+                } catch (ArrayIndexOutOfBoundsException c) {
+                    columnaFaltante.add(i + 1);
                 } catch (SQLException ex) {
-                    int errorCode = ex.getErrorCode();
-                    if(errorCode == 1062) {
-                        System.out.println("Clave Primaria Duplicada");
-                    }else {
-                        throw new SQLException("Error en la base de datos: " + ex.getMessage());
+                    String error = ex.getMessage();
+                    if (error.equals("1062")) {
+                        llaveDuplicada.add(i + 1);
+                    } else {
+                        errorDesconocido.add(i + 1);
                     }
-                } catch (NumberFormatException n) {
-                    System.err.println("error al evavular la cantidad como un entero");
+                } catch (NumberFormatException | ArithmeticException n) {
+                    errorDesconocido.add(i + 1);
                 }
             }
 
+            resultado[0] = !llaveDuplicada.isEmpty() ? "LLaves duplicadas en las siguientes filas: \n" + llaveDuplicada.stream().map(String::valueOf).collect(Collectors.joining(", ")) : "";
+            resultado[1] = !errorDesconocido.isEmpty() ? "Error al leer las siguientes filas: \n" + errorDesconocido.stream().map(String::valueOf).collect(Collectors.joining(", ")) : "";
+            resultado[2] = !columnaFaltante.isEmpty() ? "Faltan datos en la siguientes filas: " + columnaFaltante.stream().map(String::valueOf).collect(Collectors.joining(", ")) : "";
+
         } catch (IOException e) {
             throw new IOException("Error en la Lectura de: " + e.getMessage());
-        } catch (NumberFormatException n) {
-            System.err.println("error al evavular la cantidad como un entero");
         }
+        return resultado;
     }
 
     private List<String> leerArchivo(String ruta) throws IOException {

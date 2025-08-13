@@ -14,13 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JToolBar;
 
 /**
  *
@@ -103,47 +97,7 @@ public class JFramePrincipal extends JFrame{
             base.agregarVentanillaEvento(escritorio, 20, 20);
             base.agregarComponentes();
         });
-        /*//Creando la barra de menú
-        JMenuBar barraMenu = new JMenuBar();
-        //Crear menús
-        JMenu menuEvento = new JMenu("Evento");
-        JMenu menuParticipante = new JMenu("Participante");
-        JMenu menuInscripcion = new JMenu("Inscripción");
-        //Crear ítems para evento
-        JMenuItem cargaArchivo = new JMenuItem("Carga de archivo");
-        JMenuItem formulario = new JMenuItem("Formulario");
-        //Agregar ítems al menú evento
-        menuEvento.add(cargaArchivo);
-        menuEvento.add(formulario);
         
-        //Agregar menús a la barra
-        barraMenu.add(menuEvento);
-        barraMenu.add(menuParticipante);
-        barraMenu.add(menuInscripcion);
-        
-        setJMenuBar(barraMenu);
-        
-        //----------------------------------------------------------------------------------------
-        // Crear barra de herramientas vertical
-        JToolBar menuVertical = new JToolBar(JToolBar.VERTICAL);
-        menuVertical.setFloatable(false); // Para que no se pueda mover
-
-        // Agregar botones simulando opciones de menú
-        JButton btnEvento = new JButton("Evento");
-        JButton btnParticipante = new JButton("Participante");
-        JButton btnInscripcion = new JButton("Inscripción");
-
-        // Agregarlos al menú
-        menuVertical.add(btnEvento);
-        menuVertical.add(btnParticipante);
-        menuVertical.add(btnInscripcion);
-
-        // Agregar el menú vertical a la izquierda
-        add(menuVertical, BorderLayout.WEST);
-
-        // Área central
-        JTextArea area = new JTextArea("Área de trabajo");
-        add(new JScrollPane(area), BorderLayout.CENTER);*/
         
         
         repaint();

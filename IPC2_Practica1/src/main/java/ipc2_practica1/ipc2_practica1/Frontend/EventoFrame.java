@@ -7,11 +7,12 @@ package ipc2_practica1.ipc2_practica1.Frontend;
 import com.toedter.calendar.JDateChooser;
 import ipc2_practica1.ipc2_practica1.Backend.ControladorEntreBackendYFrontend;
 import java.awt.Font;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
@@ -67,7 +68,6 @@ public class EventoFrame extends FrameBase {
         JComboBox<String> opciones = new JComboBox(tipo);
         setBonsJComboBox(opciones, 190, 130, LARGO, ANCHO, font2);
         frameEvento.add(opciones);
-        
 
         JLabel tituloLabel = new JLabel("Titulo Del Evento: ");
         setBonsJLabel(tituloLabel, 10, 170, LARGO, ANCHO, font1);
@@ -76,7 +76,6 @@ public class EventoFrame extends FrameBase {
         JTextField textTitulo = new JTextField();
         setBonsJText(textTitulo, 190, 170, LARGO, ANCHO, font2);
         frameEvento.add(textTitulo);
-        
 
         JLabel ubicacionJLabel = new JLabel("Ubicación: ");
         setBonsJLabel(ubicacionJLabel, 10, 210, LARGO, ANCHO, font1);
@@ -85,7 +84,6 @@ public class EventoFrame extends FrameBase {
         JTextField textUbicacion = new JTextField();
         setBonsJText(textUbicacion, 190, 210, LARGO, ANCHO, font2);
         frameEvento.add(textUbicacion);
-        
 
         JLabel cupoMaxJLabel = new JLabel("Cupo Máximo: ");
         setBonsJLabel(cupoMaxJLabel, 10, 250, LARGO, ANCHO, font1);
@@ -93,12 +91,20 @@ public class EventoFrame extends FrameBase {
 
         SpinnerNumberModel cupoMax = new SpinnerNumberModel(0, 0, 1000, 1);
         JSpinner jspinnerCupoMax = new JSpinner(cupoMax);
-        setJSpinner(jspinnerCupoMax, 190, 250, LARGO, ANCHO, font2);
+        setBonsJSpinner(jspinnerCupoMax, 190, 250, LARGO, ANCHO, font2);
         frameEvento.add(jspinnerCupoMax);
-        
 
+        JLabel costoJLabel = new JLabel("Costo Inscripción");
+        setBonsJLabel(costoJLabel, 10, 290, LARGO, ANCHO, font1);
+        frameEvento.add(costoJLabel);
+
+        SpinnerNumberModel costo = new SpinnerNumberModel(0.00, 0.00, 1000.00, 1.50);
+        JSpinner jspinnerCosto = new JSpinner(costo);
+        setBonsJSpinner(jspinnerCosto, 190, 290, LARGO, ANCHO, font2);
+        frameEvento.add(jspinnerCosto);
+        
         JButton enviarFormularioJButton = new JButton("Enviar Formulario");
-        setBonsJButton(enviarFormularioJButton, 25, 290, (LARGO + 50), ANCHO, font1);
+        setBonsJButton(enviarFormularioJButton, 25, 330, (LARGO + 50), ANCHO, font1);
         frameEvento.add(enviarFormularioJButton);
         enviarFormularioJButton.addActionListener(e -> {
             try {
@@ -109,17 +115,18 @@ public class EventoFrame extends FrameBase {
                 String titulo = textTitulo.getText();
                 String ubicacion = textUbicacion.getText();
                 int cupo = (int) jspinnerCupoMax.getValue();
-                
-                controlador.insetarFormularioEvento(codigo, fechaStr, opcionEvento, titulo, ubicacion, cupo);
+                BigDecimal costoInscripcion = new BigDecimal(jspinnerCosto.getValue().toString());
+
+                controlador.insetarFormularioEvento(codigo, fechaStr, opcionEvento, titulo, ubicacion, cupo, costoInscripcion);
                 JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Evento Guardado Exitosamente.</p></html>");
-                
+
                 textCodigo.setText("");
                 eventoFecha.setDate(null);
                 opciones.setSelectedIndex(0);
                 textTitulo.setText("");
                 textUbicacion.setText("");
                 jspinnerCupoMax.setValue(0);
-                
+
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + ex.getMessage() + "\n Vuelva a intentar.</p></html>");
             }
@@ -128,14 +135,21 @@ public class EventoFrame extends FrameBase {
 
     @Override
     protected void ejecutarInstruccionDeBoton() {
-        super.enviarArchivoJButton.addActionListener(e -> {
-            try {
-                controlador.insetarArchivoEvento(super.path);
-                JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Archivo Subido Exitosamente.</p></html>");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + ex.getMessage() + "\n Vuelva a intentar.</p></html>");
+        try {
+            String[] resultado = controlador.insetarArchivoEvento(super.path);
+            if (!resultado[0].equals("")) {
+                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + resultado[0] + "\n Vuelva a intentar.</p></html>");
             }
-        });
+            if (!resultado[1].equals("")) {
+                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + resultado[1] + "\n Vuelva a intentar.</p></html>");
+            }
+            if (!resultado[2].equals("")) {
+                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + resultado[2] + "\n Vuelva a intentar.</p></html>");
+            }
+            JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Archivo Leído.</p></html>");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + ex.getMessage() + "\n Vuelva a intentar.</p></html>");
+        }
     }
 
     private void setBonsJButton(JButton jbutton, int x, int y, int z, int w, Font font) {
@@ -164,7 +178,7 @@ public class EventoFrame extends FrameBase {
         jcombobox.setFont(font);
     }
 
-    private void setJSpinner(JSpinner jspinner, int x, int y, int z, int w, Font font) {
+    private void setBonsJSpinner(JSpinner jspinner, int x, int y, int z, int w, Font font) {
         jspinner.setBounds(x, y, z, w);
         jspinner.setFont(font);
     }

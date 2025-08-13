@@ -47,7 +47,7 @@ public class FrameBase extends JInternalFrame {
         frameEvento.add(rutaArchivo);
         
         enviarArchivoJButton = new JButton("Enviar Archivo");
-        enviarArchivoJButton.setBounds(250, 290, 200, 20);
+        enviarArchivoJButton.setBounds(250, 330, 200, 20);
         enviarArchivoJButton.setEnabled(false);
         frameEvento.add(enviarArchivoJButton);
         enviarArchivoJButton.addActionListener(e -> {
