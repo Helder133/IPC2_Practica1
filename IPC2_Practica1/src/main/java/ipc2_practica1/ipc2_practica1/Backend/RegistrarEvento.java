@@ -17,7 +17,7 @@ public class RegistrarEvento {
     private final String tituloDeEvento;
     private final String ubicacion;
     private final int cupoMax;
-    private BigDecimal costo;
+    private final BigDecimal costo;
 
     public RegistrarEvento(String codigoDeEvento, String fechaDelEvento, String tipoDeEvento, String tituloDeEvento, String ubicacion, int cupoMax, BigDecimal costo) {
         this.codigoDeEvento = codigoDeEvento;

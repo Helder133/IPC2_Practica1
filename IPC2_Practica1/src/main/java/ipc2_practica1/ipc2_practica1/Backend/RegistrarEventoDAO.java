@@ -4,7 +4,6 @@
  */
 package ipc2_practica1.ipc2_practica1.Backend;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -54,7 +53,6 @@ public class RegistrarEventoDAO implements CRUD<RegistrarEvento>{
             if (e.getErrorCode() == 1062){
                 throw new SQLException("1062");
             } else {
-                e.printStackTrace();
                 throw new SQLException("Error al intentar insertar el evento a la base: " + evento.toString() + e.getErrorCode());
             }
         }

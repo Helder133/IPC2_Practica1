@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,20 +67,56 @@ public class LecturaDeArchivos {
         return resultado;
     }
 
-    private List<String> leerArchivo(String ruta) throws IOException {
+    public List<String> leerArchivo(String ruta) throws IOException {
         List<String> listaInstruccion = new LinkedList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
             String linea;
 
             while ((linea = br.readLine()) != null) {
-                int inicio = linea.indexOf("(");
-                int fin = linea.indexOf(")");
+                int inicio = 0;
+                int fin = linea.indexOf("(");
 
                 if (inicio != -1 && fin != -1) {
-                    String subLinea = linea.substring(inicio + 1, fin);
-
-                    listaInstruccion.add(subLinea);
+                    String subLinea = linea.substring(inicio, fin);
+                    switch (subLinea) {
+                        case "REGISTRO_EVENTO" -> {
+                            System.out.println("Evento");
+                            extraerDatos(linea);
+                            System.out.println("");
+                        }
+                        case "REGISTRO_PARTICIPANTE" -> {
+                            System.out.println("REGISTRO_PARTICIPANTE");
+                            extraerDatos(linea);
+                            System.out.println("");
+                        }
+                        case "INSCRIPCION" -> {
+                            System.out.println("INSCRIPCION");
+                            extraerDatos(linea);
+                            System.out.println("");
+                        }
+                        case "PAGO" -> {
+                            System.out.println("PAGO");
+                            extraerDatos(linea);
+                            System.out.println("");
+                        }
+                        case "VALIDAR_INSCRIPCION" -> {
+                        }
+                        case "REGISTRO_ACTIVIDAD" -> {
+                        }
+                        case "ASISTENCIA" -> {
+                        }
+                        case "CERTIFICADO" -> {
+                        }
+                        case "REPORTE_PARTICIPANTES" -> {
+                        }
+                        case "REPORTE_ACTIVIDADES" -> {
+                        }
+                        case "REPORTE_EVENTOS" -> {
+                        }
+                        default ->
+                            throw new AssertionError();
+                    }
                 }
             }
 
@@ -89,6 +124,16 @@ public class LecturaDeArchivos {
             throw new IOException("Error al tratar de leer la ruta: " + ruta + " ; " + e.getMessage());
         }
         return listaInstruccion;
+    }
+
+    private void extraerDatos(String linea) {
+        int inicio = linea.indexOf("(");
+        int fin = linea.indexOf(")");
+
+        if (inicio != -1 && fin != -1) {
+            String subLinea = linea.substring(inicio + 1, fin);
+            System.out.println(subLinea);
+        }
     }
 
 }

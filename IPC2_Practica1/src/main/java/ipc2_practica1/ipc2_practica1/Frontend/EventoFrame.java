@@ -9,7 +9,6 @@ import ipc2_practica1.ipc2_practica1.Backend.ControladorEntreBackendYFrontend;
 import java.awt.Font;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
