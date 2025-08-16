@@ -4,6 +4,7 @@
  */
 package ipc2_practica1.ipc2_practica1.Backend;
 
+import ipc2_practica1.ipc2_practica1.Frontend.CargaDeArchivoFrame;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -13,7 +14,12 @@ import java.sql.SQLException;
  * @author helder
  */
 public class ControladorEntreBackendYFrontend {
+    private CargaDeArchivoFrame carga;
 
+    public void setCarga(CargaDeArchivoFrame carga) {
+        this.carga = carga;
+    }
+    
     public void insetarFormularioEvento(String codigo, String fecha,
             String tipo, String titulo, String ubicacion, int max, BigDecimal costo) throws SQLException {
         try {
@@ -25,13 +31,11 @@ public class ControladorEntreBackendYFrontend {
         }
     }
     
-    public String[] insetarArchivoEvento (String path) throws IOException {
-        try {
-            LecturaDeArchivos lectura = new LecturaDeArchivos();
-            return lectura.leerArchivoEvento(path);
-        } catch (IOException e) {
-            throw new IOException("Error: " + e.getMessage());
-        }
+    public void insetarArchivo (String path) throws IOException {
+        LecturaDeArchivos lectura = new LecturaDeArchivos();
+        lectura.setDatos(path, 1000);
+        lectura.setCarga(carga);
+        lectura.start();
     } 
     
 }

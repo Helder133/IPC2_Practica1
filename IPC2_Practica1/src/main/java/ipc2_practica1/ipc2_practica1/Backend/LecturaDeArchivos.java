@@ -4,6 +4,7 @@
  */
 package ipc2_practica1.ipc2_practica1.Backend;
 
+import ipc2_practica1.ipc2_practica1.Frontend.CargaDeArchivoFrame;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,66 +12,27 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  *
  * @author helder
  */
-public class LecturaDeArchivos {
+public class LecturaDeArchivos extends Thread {
 
-    public String[] leerArchivoEvento(String ruta) throws IOException {
-        String[] resultado = {"", "", ""};
-        List<Integer> llaveDuplicada = new LinkedList<>();
-        List<Integer> errorDesconocido = new LinkedList<>();
-        List<Integer> columnaFaltante = new LinkedList<>();
-        try {
-            RegistrarEventoDAO nuevoEvento = new RegistrarEventoDAO();
-            List<String> instruccionEvento = leerArchivo(ruta);
-            for (int i = 0; i < instruccionEvento.size(); i++) {
-                try {
-                    String instruccion = instruccionEvento.get(i);
+    private String ruta1;
+    private int tiempo;
+    private CargaDeArchivoFrame carga;
 
-                    String[] partes = instruccion.split(",");
-
-                    String codigo = partes[0].replace("\"", "").trim();
-                    String fecha = partes[1].replace("\"", "").trim();
-                    String tipo = partes[2].replace("\"", "").trim();
-                    String tema = partes[3].replace("\"", "").trim();
-                    String lugar = partes[4].replace("\"", "").trim();
-                    int capacidad = Integer.parseInt(partes[5].trim());
-                    BigDecimal costo = new BigDecimal(partes[6].trim());
-                    RegistrarEvento evento = new RegistrarEvento(codigo, fecha, tipo, tema, lugar, capacidad, costo);
-
-                    nuevoEvento.insetar(evento);
-                } catch (ArrayIndexOutOfBoundsException c) {
-                    columnaFaltante.add(i + 1);
-                } catch (SQLException ex) {
-                    String error = ex.getMessage();
-                    if (error.equals("1062")) {
-                        llaveDuplicada.add(i + 1);
-                    } else {
-                        errorDesconocido.add(i + 1);
-                    }
-                } catch (NumberFormatException | ArithmeticException n) {
-                    errorDesconocido.add(i + 1);
-                }
-            }
-
-            resultado[0] = !llaveDuplicada.isEmpty() ? "LLaves duplicadas en las siguientes filas: \n" + llaveDuplicada.stream().map(String::valueOf).collect(Collectors.joining(", ")) : "";
-            resultado[1] = !errorDesconocido.isEmpty() ? "Error al leer las siguientes filas: \n" + errorDesconocido.stream().map(String::valueOf).collect(Collectors.joining(", ")) : "";
-            resultado[2] = !columnaFaltante.isEmpty() ? "Faltan datos en la siguientes filas: " + columnaFaltante.stream().map(String::valueOf).collect(Collectors.joining(", ")) : "";
-
-        } catch (IOException e) {
-            throw new IOException("Error en la Lectura de: " + e.getMessage());
-        }
-        return resultado;
+    public void setCarga(CargaDeArchivoFrame carga) {
+        this.carga = carga;
     }
-
-    public List<String> leerArchivo(String ruta) throws IOException {
-        List<String> listaInstruccion = new LinkedList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+    
+    
+    private void leerArchivo() throws IOException, InterruptedException {
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta1))) {
             String linea;
 
             while ((linea = br.readLine()) != null) {
@@ -82,37 +44,57 @@ public class LecturaDeArchivos {
                     switch (subLinea) {
                         case "REGISTRO_EVENTO" -> {
                             System.out.println("Evento");
-                            extraerDatos(linea);
+                            carga.modificarMensaje("Evento");
+                            String datos = extraerDatos(linea);
+                            cargarDatosBD(datos);
+                            Thread.sleep(tiempo);
                             System.out.println("");
                         }
                         case "REGISTRO_PARTICIPANTE" -> {
                             System.out.println("REGISTRO_PARTICIPANTE");
                             extraerDatos(linea);
+                            Thread.sleep(tiempo);
                             System.out.println("");
                         }
                         case "INSCRIPCION" -> {
                             System.out.println("INSCRIPCION");
                             extraerDatos(linea);
+                            Thread.sleep(tiempo);
                             System.out.println("");
                         }
                         case "PAGO" -> {
                             System.out.println("PAGO");
                             extraerDatos(linea);
+                            Thread.sleep(tiempo);
                             System.out.println("");
                         }
                         case "VALIDAR_INSCRIPCION" -> {
+                            System.out.println("Falta logia :v");
+                            Thread.sleep(tiempo);
                         }
                         case "REGISTRO_ACTIVIDAD" -> {
+                            System.out.println("Falta logia :v");
+                            Thread.sleep(tiempo);
                         }
                         case "ASISTENCIA" -> {
+                            System.out.println("Falta logia :v");
+                            Thread.sleep(tiempo);
                         }
                         case "CERTIFICADO" -> {
+                            System.out.println("Falta logia :v");
+                            Thread.sleep(tiempo);
                         }
                         case "REPORTE_PARTICIPANTES" -> {
+                            System.out.println("Falta logia :v");
+                            Thread.sleep(tiempo);
                         }
                         case "REPORTE_ACTIVIDADES" -> {
+                            System.out.println("Falta logia :v");
+                            Thread.sleep(tiempo);
                         }
                         case "REPORTE_EVENTOS" -> {
+                            System.out.println("Falta logia :v");
+                            Thread.sleep(tiempo);
                         }
                         default ->
                             throw new AssertionError();
@@ -121,19 +103,36 @@ public class LecturaDeArchivos {
             }
 
         } catch (IOException e) {
-            throw new IOException("Error al tratar de leer la ruta: " + ruta + " ; " + e.getMessage());
+            throw new IOException("Error al tratar de leer la ruta: " + ruta1 + " ; " + e.getMessage());
         }
-        return listaInstruccion;
     }
 
-    private void extraerDatos(String linea) {
+    private String extraerDatos(String linea) {
         int inicio = linea.indexOf("(");
         int fin = linea.indexOf(")");
 
         if (inicio != -1 && fin != -1) {
-            String subLinea = linea.substring(inicio + 1, fin);
-            System.out.println(subLinea);
+            return linea.substring(inicio + 1, fin);
         }
+        return "";
+    }
+
+    public void setDatos(String ruta, int tiempo) {
+        this.ruta1 = ruta;
+        this.tiempo = tiempo;
+    }
+
+    @Override
+    public void run() {
+        try {
+            leerArchivo();
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(LecturaDeArchivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void cargarDatosBD(String datos) {
+        carga.modificarMensaje(datos);
     }
 
 }

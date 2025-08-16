@@ -50,9 +50,18 @@ public class JFramePrincipal extends JFrame {
         Font menuFont = new Font("Helvetica", Font.BOLD, 14);
         Font menuItemFont = new Font("Helvetica", Font.PLAIN, 13);
         
+        // Menú "Carga de archivo"
+        JMenu menuArchivo = new JMenu("Archivo");
+        menuArchivo.setFont(menuFont);
+        JMenuItem cargarArchivo = new JMenuItem("Cargar Archivo");
+        cargarArchivo.setFont(menuItemFont);
+        
+        menuArchivo.add(cargarArchivo);
+        
         // Menú "Registro"
         JMenu menuRegistro = new JMenu("Registro"); 
         menuRegistro.setFont(menuFont);
+        
         JMenuItem registrarEvento = new JMenuItem("Registrar Evento"); 
         registrarEvento.setFont(menuItemFont);
         JMenuItem registrarParticipante = new JMenuItem("Registrar Participante"); 
@@ -85,6 +94,7 @@ public class JFramePrincipal extends JFrame {
         menuReportes.add(repEvento);
 
         // Agregar menús al menuBar
+        menuBar.add(menuArchivo);
         menuBar.add(menuRegistro);
         menuBar.add(menuOperaciones);
         menuBar.add(menuReportes);
@@ -93,10 +103,14 @@ public class JFramePrincipal extends JFrame {
         escritorio.setBackground(Color.GRAY);
         add(escritorio, BorderLayout.CENTER);
         
+        cargarArchivo.addActionListener( e -> {
+            CargaDeArchivoFrame carga = new CargaDeArchivoFrame();
+            carga.CargaDeArchivoFrame(escritorio, 20, 20);
+        });
+        
         registrarEvento.addActionListener(e -> {
             EventoFrame base = new EventoFrame();
-            base.agregarVentanillaEvento(escritorio, 20, 20);
-            base.agregarComponentes();
+            base.agregarVentanillaEvento(escritorio, 30, 20);
         });
         
         repaint();

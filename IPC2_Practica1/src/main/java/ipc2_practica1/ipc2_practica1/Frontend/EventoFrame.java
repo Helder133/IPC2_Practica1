@@ -7,7 +7,6 @@ package ipc2_practica1.ipc2_practica1.Frontend;
 import com.toedter.calendar.JDateChooser;
 import ipc2_practica1.ipc2_practica1.Backend.ControladorEntreBackendYFrontend;
 import java.awt.Font;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -35,10 +34,11 @@ public class EventoFrame extends FrameBase {
 
     public void agregarVentanillaEvento(JDesktopPane jframe, int x, int y) {
         String titulo = "Ventanilla de evento";
-        frameEvento = super.agragarVentanilla(jframe, titulo, x, y);
+        frameEvento = agragarVentanilla(jframe, titulo, x, y);
+        agregarComponentes();
     }
 
-    public void agregarComponentes() {
+    private void agregarComponentes() {
         Font font1 = new Font("Showcard Gothic", Font.BOLD, 15);
         Font font2 = new Font("Helvetica", Font.ITALIC, 15);
 
@@ -130,25 +130,6 @@ public class EventoFrame extends FrameBase {
                 JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + ex.getMessage() + "\n Vuelva a intentar.</p></html>");
             }
         });
-    }
-
-    @Override
-    protected void ejecutarInstruccionDeBoton() {
-        try {
-            String[] resultado = controlador.insetarArchivoEvento(super.path);
-            if (!resultado[0].equals("")) {
-                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + resultado[0] + "\n Vuelva a intentar.</p></html>");
-            }
-            if (!resultado[1].equals("")) {
-                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + resultado[1] + "\n Vuelva a intentar.</p></html>");
-            }
-            if (!resultado[2].equals("")) {
-                JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + resultado[2] + "\n Vuelva a intentar.</p></html>");
-            }
-            JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Archivo Leído.</p></html>");
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + ex.getMessage() + "\n Vuelva a intentar.</p></html>");
-        }
     }
 
     private void setBonsJButton(JButton jbutton, int x, int y, int z, int w, Font font) {
