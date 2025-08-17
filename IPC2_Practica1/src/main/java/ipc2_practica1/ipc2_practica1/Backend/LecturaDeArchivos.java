@@ -174,10 +174,6 @@ public class LecturaDeArchivos implements Runnable {
             } else {
                 carga.modificarMensaje(String.format("Error al intentar insetar '%s': ", codigo));
             }
-            System.err.println("SQLState = " + ex.getSQLState());
-            System.err.println("ErrorCode = " + ex.getErrorCode());
-            System.err.println("Message = " + ex.getMessage());
-            ex.printStackTrace();
         }
     }
 

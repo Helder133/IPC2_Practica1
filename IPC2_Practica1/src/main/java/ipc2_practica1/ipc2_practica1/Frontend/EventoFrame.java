@@ -118,7 +118,6 @@ public class EventoFrame extends FrameBase {
 
                 if (!codigo.equals("") && fecha != null && !opcionEvento.equals("Seleccionar") && !titulo.equals("")
                         && !ubicacion.equals("") && cupo > 0 && (costoInscripcion.compareTo(BigDecimal.ZERO) >= 0)) {
-                    System.out.println("Entrando sin importar la validacion ");
                     
                     ControladorEntreBackendYFrontend controlador = new ControladorEntreBackendYFrontend();
                     controlador.insetarFormularioEvento(codigo, fechaStr, opcionEvento, titulo, ubicacion, cupo, costoInscripcion);

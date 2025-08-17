@@ -21,7 +21,6 @@ public class ConexionBD {
     private static final String URL = "jdbc:mysql://" + IP + ":" + PUERTO + "/" + SCHEMA;
     
     public Connection conexion() throws SQLException {
-        System.out.println("URL de connexion: "+ URL);
         return DriverManager.getConnection(URL, USER_NAME, PASSWORD);
     }
 }
