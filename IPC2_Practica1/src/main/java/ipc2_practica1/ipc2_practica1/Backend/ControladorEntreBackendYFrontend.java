@@ -27,15 +27,20 @@ public class ControladorEntreBackendYFrontend {
             RegistrarEventoDAO eventoDAO = new RegistrarEventoDAO();
             eventoDAO.insetar(evento);
         } catch (SQLException e) {
-            throw new SQLException("Error: " + e.getMessage());
+            if (e.getErrorCode() == 1062) {
+                throw new SQLException("El codigo del evento ya existe");
+            }else {
+                throw new SQLException("Error: " + e.getMessage());
+            }
         }
     }
     
-    public void insetarArchivo (String path) throws IOException {
+    public void insetarArchivo (String path, int tiempo) throws IOException {
         LecturaDeArchivos lectura = new LecturaDeArchivos();
-        lectura.setDatos(path, 1000);
+        Thread hilo = new Thread(lectura);
+        lectura.setDatos(path, tiempo);
         lectura.setCarga(carga);
-        lectura.start();
+        hilo.start();
     } 
     
 }

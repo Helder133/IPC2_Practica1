@@ -50,11 +50,7 @@ public class RegistrarEventoDAO implements CRUD<RegistrarEvento>{
             int filasAfectadas = stmt.executeUpdate();
             System.out.println("Filas insertadas: " + filasAfectadas);
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1062){
-                throw new SQLException("1062");
-            } else {
-                throw new SQLException("Error al intentar insertar el evento a la base: " + evento.toString() + e.getErrorCode());
-            }
+            throw e;
         }
         
     }

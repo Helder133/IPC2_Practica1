@@ -60,10 +60,6 @@ public class RegistrarEvento {
     @Override
     public String toString() {
         return "RegistrarEvento{" + "codigoDeEvento=" + codigoDeEvento + ", fechaDelEvento=" + fechaDelEvento + ", tipoDeEvento=" + tipoDeEvento + ", tituloDeEvento=" + tituloDeEvento + ", ubicacion=" + ubicacion + ", cupoMax=" + cupoMax + ", costo=" + costo + '}';
-    }
-
-    
-    
-    
+    } 
     
 }

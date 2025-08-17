@@ -7,6 +7,7 @@ package ipc2_practica1.ipc2_practica1.Frontend;
 import com.toedter.calendar.JDateChooser;
 import ipc2_practica1.ipc2_practica1.Backend.ControladorEntreBackendYFrontend;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -29,7 +30,6 @@ public class EventoFrame extends FrameBase {
 
     private static final int LARGO = 150;
     private static final int ANCHO = 20;
-    private final ControladorEntreBackendYFrontend controlador = new ControladorEntreBackendYFrontend();
     private JInternalFrame frameEvento;
 
     public void agregarVentanillaEvento(JDesktopPane jframe, int x, int y) {
@@ -62,7 +62,7 @@ public class EventoFrame extends FrameBase {
         setBonsJLabel(tipoEvento, 10, 130, LARGO, ANCHO, font1);
         frameEvento.add(tipoEvento);
 
-        String[] tipo = {"Seleccionar...", "CHARLA", "CONGRESO", "TALLER", "DEBATE"};
+        String[] tipo = {"Seleccionar", "CHARLA", "CONGRESO", "TALLER", "DEBATE"};
 
         JComboBox<String> opciones = new JComboBox(tipo);
         setBonsJComboBox(opciones, 190, 130, LARGO, ANCHO, font2);
@@ -101,7 +101,7 @@ public class EventoFrame extends FrameBase {
         JSpinner jspinnerCosto = new JSpinner(costo);
         setBonsJSpinner(jspinnerCosto, 190, 290, LARGO, ANCHO, font2);
         frameEvento.add(jspinnerCosto);
-        
+
         JButton enviarFormularioJButton = new JButton("Enviar Formulario");
         setBonsJButton(enviarFormularioJButton, 25, 330, (LARGO + 50), ANCHO, font1);
         frameEvento.add(enviarFormularioJButton);
@@ -109,25 +109,36 @@ public class EventoFrame extends FrameBase {
             try {
                 String codigo = textCodigo.getText();
                 Date fecha = eventoFecha.getDate();
-                String fechaStr = new SimpleDateFormat(eventoFecha.getDateFormatString()).format(fecha);
+                String fechaStr = fecha != null ? new SimpleDateFormat(eventoFecha.getDateFormatString()).format(fecha) : "";
                 String opcionEvento = (String) opciones.getSelectedItem();
                 String titulo = textTitulo.getText();
                 String ubicacion = textUbicacion.getText();
                 int cupo = (int) jspinnerCupoMax.getValue();
                 BigDecimal costoInscripcion = new BigDecimal(jspinnerCosto.getValue().toString());
 
-                controlador.insetarFormularioEvento(codigo, fechaStr, opcionEvento, titulo, ubicacion, cupo, costoInscripcion);
-                JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Evento Guardado Exitosamente.</p></html>");
+                if (!codigo.equals("") && fecha != null && !opcionEvento.equals("Seleccionar") && !titulo.equals("")
+                        && !ubicacion.equals("") && cupo > 0 && (costoInscripcion.compareTo(BigDecimal.ZERO) >= 0)) {
+                    System.out.println("Entrando sin importar la validacion ");
+                    
+                    ControladorEntreBackendYFrontend controlador = new ControladorEntreBackendYFrontend();
+                    controlador.insetarFormularioEvento(codigo, fechaStr, opcionEvento, titulo, ubicacion, cupo, costoInscripcion);
+                    JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Evento Guardado Exitosamente.</p></html>");
 
-                textCodigo.setText("");
-                eventoFecha.setDate(null);
-                opciones.setSelectedIndex(0);
-                textTitulo.setText("");
-                textUbicacion.setText("");
-                jspinnerCupoMax.setValue(0);
+                    textCodigo.setText("");
+                    eventoFecha.setDate(null);
+                    opciones.setSelectedIndex(0);
+                    textTitulo.setText("");
+                    textUbicacion.setText("");
+                    jspinnerCupoMax.setValue(0);
+                    jspinnerCosto.setValue(0);
+                } else {
+                    JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">Erro: todo los campos son obligatorios.</p></html>");
+                }
 
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">" + ex.getMessage() + "\n Vuelva a intentar.</p></html>");
+            } catch (HeadlessException er) {
+                System.out.println("error");
             }
         });
     }

@@ -110,7 +110,7 @@ public class JFramePrincipal extends JFrame {
         
         registrarEvento.addActionListener(e -> {
             EventoFrame base = new EventoFrame();
-            base.agregarVentanillaEvento(escritorio, 30, 20);
+            base.agregarVentanillaEvento(escritorio, 20, 20);
         });
         
         repaint();

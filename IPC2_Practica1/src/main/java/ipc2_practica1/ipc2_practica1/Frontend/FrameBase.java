@@ -5,7 +5,6 @@
 package ipc2_practica1.ipc2_practica1.Frontend;
 
 import java.awt.Color;
-import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
@@ -24,5 +23,5 @@ public class FrameBase extends JInternalFrame {
         jframe.add(ventana);
         return ventana;
     }
-
+    
 }
