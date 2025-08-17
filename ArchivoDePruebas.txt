@@ -1,0 +1,3 @@
+REGISTRO_EVENTO("EVT-00000001","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150,75.00);
+REGISTRO_EVENTO("EVT-00000002","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150,75.00);
+REGISTRO_EVENTO("EVT-00000003","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150,75.00);

@@ -1,0 +1,69 @@
+/* Example */
+
+REGISTRO_EVENTO("EVT-00000001","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150,50.00);
+REGISTRO_EVENTO("EVT-00000002","26/08/2025","TALLER","Forja de Espadas","Sala Taller 1",50,120.00);
+REGISTRO_EVENTO("EVT-00000003","25/08/2025","CHARLAA","Tecnología Sheikah","Auditorio Central",150,50.00);
+REGISTRO_EVENTO("EVT-00000004","26/08/2025","TALLER","Forja de Espadas","Sala Taller 1",50f,120.00);
+REGISTRO_EVENTO("EVT-00000005","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150,50.00f);
+REGISTRO_EVENTO("EVT-00000006","26/08/2025","TALLER","Forja de Espadas","Sala Taller 1",50,120.00);
+
+REGISTRO_PARTICIPANTE("Zelda Hyrule","ESTUDIANTE","Universidad de Hyrule","zelda@hyrule.edu");
+REGISTRO_PARTICIPANTE("Link Hyrule","PROFESIONAL","Triforce Software","link@hyrule.com");
+REGISTRO_PARTICIPANTE("Impa Noh","PROFESIONAL","Kakariko Institute","impa@kakariko.org");
+REGISTRO_PARTICIPANTE("Daruk Goron","INVITADO","Goron Co.","daruk@goron.co");
+REGISTRO_PARTICIPANTE("Mipha Zora","PROFESIONAL","Zora Clinic","mipha@zora.net");
+REGISTRO_PARTICIPANTE("Urbosa Gerudo","PROFESIONAL","Gerudo Council","urbosa@gerudo.gov");
+
+INSCRIPCION("zelda@hyrule.edu","EVT-00000001","ASISTENTE");
+INSCRIPCION("link@hyrule.com","EVT-00000001","CONFERENCISTA");
+INSCRIPCION("impa@kakariko.org","EVT-00000001","ASISTENTE");
+INSCRIPCION("daruk@goron.co","EVT-00000001","ASISTENTE");
+
+INSCRIPCION("mipha@zora.net","EVT-00000002","TALLERISTA");
+INSCRIPCION("urbosa@gerudo.gov","EVT-00000002","ASISTENTE");
+INSCRIPCION("link@hyrule.com","EVT-00000002","ASISTENTE");
+
+PAGO("zelda@hyrule.edu","EVT-00000001","EFECTIVO",50.00);
+PAGO("link@hyrule.com","EVT-00000001","TRANSFERENCIA",50.00);
+PAGO("impa@kakariko.org","EVT-00000001","TARJETA",50.00);
+PAGO("daruk@goron.co","EVT-00000001","EFECTIVO",50.00);
+
+PAGO("mipha@zora.net","EVT-00000002","TRANSFERENCIA",120.00);
+PAGO("urbosa@gerudo.gov","EVT-00000002","TARJETA",120.00);
+PAGO("link@hyrule.com","EVT-00000002","EFECTIVO",120.00);
+
+VALIDAR_INSCRIPCION("zelda@hyrule.edu","EVT-00000001");
+VALIDAR_INSCRIPCION("link@hyrule.com","EVT-00000001");
+VALIDAR_INSCRIPCION("impa@kakariko.org","EVT-00000001");
+VALIDAR_INSCRIPCION("daruk@goron.co","EVT-00000001");
+
+VALIDAR_INSCRIPCION("mipha@zora.net","EVT-00000002");
+VALIDAR_INSCRIPCION("urbosa@gerudo.gov","EVT-00000002");
+VALIDAR_INSCRIPCION("link@hyrule.com","EVT-00000002");
+
+REGISTRO_ACTIVIDAD("ACT-00000001","EVT-00000001","CHARLA","Nuevos Runes","link@hyrule.com","10:00","12:00",30);
+REGISTRO_ACTIVIDAD("ACT-00000002","EVT-00000002","TALLER","Forja Básica","mipha@zora.net","09:00","11:00",20);
+
+ASISTENCIA("zelda@hyrule.edu","ACT-00000001");
+ASISTENCIA("impa@kakariko.org","ACT-00000001");
+ASISTENCIA("link@hyrule.com","ACT-00000001");
+
+ASISTENCIA("urbosa@gerudo.gov","ACT-00000002");
+ASISTENCIA("link@hyrule.com","ACT-00000002");
+
+CERTIFICADO("zelda@hyrule.edu","EVT-00000001");
+CERTIFICADO("impa@kakariko.org","EVT-00000001");
+CERTIFICADO("link@hyrule.com","EVT-00000001");
+CERTIFICADO("urbosa@gerudo.gov","EVT-00000002");
+CERTIFICADO("link@hyrule.com","EVT-00000002");
+
+REPORTE_PARTICIPANTES("EVT-00000001","PROFESIONAL","Triforce Software");
+REPORTE_PARTICIPANTES("EVT-00000001","","");
+REPORTE_PARTICIPANTES("EVT-00000002","","");
+
+REPORTE_ACTIVIDADES("EVT-00000001","CHARLA","link@hyrule.com");
+REPORTE_ACTIVIDADES("EVT-00000002","","");
+
+REPORTE_EVENTOS("CHARLA","01/08/2025","31/08/2025",0,500);
+REPORTE_EVENTOS("TALLER","","",10,100);
+REPORTE_EVENTOS("","01/08/2025","31/08/2025",,);
