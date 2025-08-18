@@ -16,8 +16,8 @@ public class ConexionBD {
     private static final String IP = "localhost";
     private static final int PUERTO = 3306;
     private static final String SCHEMA =   "admin_eventos";
-    private static final String USER_NAME = "Helder";
-    private static final String PASSWORD = "Helder2004*";
+    private static final String USER_NAME = "Usuario";
+    private static final String PASSWORD = "Usuario2025*";
     private static final String URL = "jdbc:mysql://" + IP + ":" + PUERTO + "/" + SCHEMA;
     
     public Connection conexion() throws SQLException {

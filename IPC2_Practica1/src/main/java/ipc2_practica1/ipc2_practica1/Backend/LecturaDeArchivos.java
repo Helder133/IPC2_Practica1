@@ -59,12 +59,10 @@ public class LecturaDeArchivos implements Runnable {
                             String datos = extraerDatos(linea);
                             cargarEventoBD(datos, contador);
                             Thread.sleep(tiempo);
-                            System.out.println("");
                         }
                         case "REGISTRO_PARTICIPANTE" -> {
-                            //System.out.println("REGISTRO_PARTICIPANTE");
-                            //extraerDatos(linea);
-                            carga.modificarMensaje(String.format("Falta logica %s", subLinea));
+                            String datos = extraerDatos(linea);
+                            cargarParticipanteBD(datos, contador);
                             Thread.sleep(tiempo);
                         }
                         case "INSCRIPCION" -> {
@@ -152,6 +150,7 @@ public class LecturaDeArchivos implements Runnable {
             String[] partes = datos.split(",");
             if (partes.length < 6) {
                 carga.modificarMensaje("fila " + contador + ": falta campo ");
+                return;
             }
             codigo = partes[0].replace("\"", "").trim();
             String fecha = partes[1].replace("\"", "").trim();
@@ -173,6 +172,37 @@ public class LecturaDeArchivos implements Runnable {
                 carga.modificarMensaje(String.format("Evento '%s' ya existe", codigo));
             } else {
                 carga.modificarMensaje(String.format("Error al intentar insetar '%s': ", codigo));
+            }
+        }
+    }
+
+    private void cargarParticipanteBD(String datos, int fila) {
+        String email = null;
+
+        try {
+
+            String[] partes = datos.split(",");
+
+            if (partes.length < 3) {
+                carga.modificarMensaje("fila " + fila + ": falta campo ");
+                return;
+            }
+            String nombre = partes[0].replace("\"", "").trim();
+            String tipo = partes[1].replace("\"", "").trim();
+            String institucion = partes[2].replace("\"", "").trim();
+            email = partes[3].replace("\"", "").trim();
+
+            RegistrarParticipante participante = new RegistrarParticipante(nombre, tipo, institucion, email);
+            RegistrarParticipanteDAO participanteDAO = new RegistrarParticipanteDAO();
+            participanteDAO.insetar(participante);
+
+            String mensaje = String.format("Participante con corre: '%s' cargado", email);
+            carga.modificarMensaje(mensaje);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                carga.modificarMensaje(String.format("Paticipante con correo: '%s' ya existe", email));
+            } else {
+                carga.modificarMensaje(String.format("Error al intentar insetar participante con correo: '%s': ", email));
             }
         }
     }
