@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -71,7 +72,8 @@ public class LecturaDeArchivos implements Runnable {
                             Thread.sleep(tiempo);
                         }
                         case "PAGO" -> {
-                            carga.modificarMensaje(String.format("Falta logica %s", subLinea));
+                            String datos = extraerDatos(linea);
+                            cargarPagoBD(datos, contador);
                             Thread.sleep(tiempo);
                         }
                         case "VALIDAR_INSCRIPCION" -> {
@@ -227,11 +229,41 @@ public class LecturaDeArchivos implements Runnable {
             InscripcionDAO inscripcionDAO = new InscripcionDAO();
             inscripcionDAO.insetar(inscripcion);
 
-            String mensaje = String.format("Incripcion registrada correctamente: '%s' '%s'", emailParticipante, codigoEvento );
+            String mensaje = String.format("Incripcion registrada correctamente: '%s' '%s'", emailParticipante, codigoEvento);
             carga.modificarMensaje(mensaje);
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 carga.modificarMensaje(String.format("La inscripcion de : '%s' , '%s', ya existe", emailParticipante, codigoEvento));
+            } else {
+                carga.modificarMensaje("Error: " + e.getMessage());
+            }
+        }
+    }
+
+    private void cargarPagoBD(String datos, int fila) {
+        String emailParticipante = null;
+        String codigoEvento = null;
+        try {
+            String[] partes = datos.split(",");
+
+            if (partes.length < 3) {
+                carga.modificarMensaje("fila " + fila + ": falta campo ");
+                return;
+            }
+            emailParticipante = partes[0].replace("\"", "").trim();
+            codigoEvento = partes[1].replace("\"", "").trim();
+            String metodoPago = partes[2].replace("\"", "").trim();
+            BigDecimal monto = new BigDecimal(partes[3].replace("\"", "").trim());
+
+            Pago pago = new Pago(emailParticipante, codigoEvento, metodoPago, monto);
+            PagoDAO pagoDAO = new PagoDAO();
+            pagoDAO.insetar(pago);
+
+            String mensaje = String.format("Pago registrada correctamente: '%s' '%s'", emailParticipante, codigoEvento);
+            carga.modificarMensaje(mensaje);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                carga.modificarMensaje(String.format("El pago de : '%s' , '%s', ya existe", emailParticipante, codigoEvento));
             } else {
                 carga.modificarMensaje("Error: " + e.getMessage());
             }
