@@ -101,4 +101,20 @@ public class ControladorEntreBackendYFrontend {
     public List<String> codigoEventoDesdeInscripcion() throws SQLException {
         return inscripcionDAO.getCodigoEventoInscripcion();
     }
+    
+    public List<String> correoDesdePago() throws SQLException {
+        return pagoDAO.getCorreoParticipantePagar();
+    }
+
+    public List<String> codigoEventoDesdePago() throws SQLException {
+        return pagoDAO.getCodigoEventoPagar();
+    }
+    
+    public void validarPago(String[] entidad) throws SQLException{
+        try {
+            inscripcionDAO.actualizar(entidad);
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
+    }
 }

@@ -132,5 +132,10 @@ public class JFramePrincipal extends JFrame {
         });
         repaint();
         setVisible(true);
+        
+        validarInscripcion.addActionListener(e -> {
+            ValidarPago validarPago = new ValidarPago();
+            validarPago.agregarVentanillaEvento(escritorio, 120, 20);
+        });
     }
 }

@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -77,7 +76,8 @@ public class LecturaDeArchivos implements Runnable {
                             Thread.sleep(tiempo);
                         }
                         case "VALIDAR_INSCRIPCION" -> {
-                            carga.modificarMensaje(String.format("Falta logica %s", subLinea));
+                            String datos = extraerDatos(linea);
+                            validarPago(datos, contador);
                             Thread.sleep(tiempo);
                         }
                         case "REGISTRO_ACTIVIDAD" -> {
@@ -267,6 +267,28 @@ public class LecturaDeArchivos implements Runnable {
             } else {
                 carga.modificarMensaje("Error: " + e.getMessage());
             }
+        }
+    }
+
+    private void validarPago(String datos, int fila) {
+        String[] dato = new String[2];
+        try {
+            String[] partes = datos.split(",");
+
+            if (partes.length < 1) {
+                carga.modificarMensaje("fila " + fila + ": falta campo ");
+                return;
+            }
+
+            dato[0] = partes[0].replace("\"", "").trim();
+            dato[1] = partes[1].replace("\"", "").trim();
+            InscripcionDAO inscripcionDAO = new InscripcionDAO();
+            inscripcionDAO.actualizar(dato);
+            
+            String mensaje = String.format("Pago validado correctamente: '%s' '%s'", dato[0], dato[1]);
+            carga.modificarMensaje(mensaje);
+        } catch (SQLException e) {
+            carga.modificarMensaje("Error: " + e.getMessage());
         }
     }
 
