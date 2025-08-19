@@ -7,19 +7,23 @@ package ipc2_practica1.ipc2_practica1.Frontend;
 import ipc2_practica1.ipc2_practica1.Backend.ControladorEntreBackendYFrontend;
 import java.awt.Font;
 import java.awt.HeadlessException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
  * @author helder
  */
-public class InscripcionJFrame extends FrameBase {
+public class PagoJFrame extends FrameBase {
 
     private static final int LARGO = 200;
     private static final int ANCHO = 30;
@@ -40,26 +44,26 @@ public class InscripcionJFrame extends FrameBase {
         setBonsJComboBox(emailParticipante, 10, 50, LARGO, ANCHO, font2);
         frameEvento.add(emailParticipante);
 
-        JLabel participanteEmail = new JLabel("Nombre de participante...");
+        /*JLabel participanteEmail = new JLabel("Nombre de participante...");
         setBonsJLabel(participanteEmail, 240, 50, LARGO, ANCHO, font1);
-        frameEvento.add(participanteEmail);
+        frameEvento.add(participanteEmail);*/
 
-        String[][] participante;
+        List<String> participante;
         try {
-            participante = controlador.getParticipantes();
+            participante = controlador.correoDesdeInscripcion();
             emailParticipante.addItem("Seleccione correo...");
-            for (String[] participante1 : participante) {
-                emailParticipante.addItem(participante1[1]);
+            for (String participante1 : participante) {
+                emailParticipante.addItem(participante1);
             }
 
-            emailParticipante.addActionListener(e -> {
+            /*emailParticipante.addActionListener(e -> {
                 int index = emailParticipante.getSelectedIndex();
                 if (index > 0) {
                     participanteEmail.setText(participante[index-1][0]);
                 } else {
                     participanteEmail.setText("Nombre del participante...");
                 }
-            });
+            });*/
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">Erro: " + ex.getErrorCode() + ".</p></html>");
         }
@@ -68,40 +72,49 @@ public class InscripcionJFrame extends FrameBase {
         setBonsJComboBox(codigoEvento, 10, 100, LARGO, ANCHO, font2);
         frameEvento.add(codigoEvento);
 
-        JLabel tituloEvento = new JLabel("Titulo de evento...");
+        /*JLabel tituloEvento = new JLabel("Titulo de evento...");
         setBonsJLabel(tituloEvento, 240, 100, LARGO, ANCHO, font1);
-        frameEvento.add(tituloEvento);
+        frameEvento.add(tituloEvento);*/
 
-        String[][] evento;
+        List<String> evento;
         try {
-            evento = controlador.getEventos();
+            evento = controlador.codigoEventoDesdeInscripcion();
             codigoEvento.addItem("Seleccione codigo...");
-            for (String[] evento1 : evento) {
-                codigoEvento.addItem(evento1[0]);
+            for (String evento1 : evento) {
+                codigoEvento.addItem(evento1);
             }
 
-            codigoEvento.addActionListener(ex -> {
+            /*codigoEvento.addActionListener(ex -> {
                 int index = codigoEvento.getSelectedIndex();
                 if (index > 0) {
                     tituloEvento.setText(evento[index-1][1]);
                 } else {
                     tituloEvento.setText("Nombre del evento...");
                 }
-            });
+            });*/
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">Erro: " + e.getErrorCode() + ".</p></html>");
         }
         
-        JLabel tipoInscripcion = new JLabel("Tipo inscripcion");
-        setBonsJLabel(tipoInscripcion, 10, 150, LARGO, ANCHO, font1);
+        JLabel precio = new JLabel("Cantidad de pago: ");
+        setBonsJLabel(precio, 10, 150, LARGO, ANCHO, font1);
+        frameEvento.add(precio);
+        
+        SpinnerNumberModel cantidad = new SpinnerNumberModel(0, 0, 1000, 1);
+        JSpinner jspinnerCantidad = new JSpinner(cantidad);
+        setBonsJSpinner(jspinnerCantidad, 240, 150, LARGO, ANCHO, font2);
+        frameEvento.add(jspinnerCantidad);
+        
+        JLabel tipoInscripcion = new JLabel("Metodo de pago: ");
+        setBonsJLabel(tipoInscripcion, 10, 200, LARGO, ANCHO, font1);
         frameEvento.add(tipoInscripcion);
         
-        String[] tipo = {"Seleccionar", "ASISTENTE", "CONFERENCISTA", "TALLERISTA", "OTRO"};
+        String[] tipo = {"Seleccionar", "EFECTIVO", "TRANSFERENCIA", "TARJETA"};
 
-        JComboBox<String> inscripcionTipo = new JComboBox(tipo);
-        setBonsJComboBox(inscripcionTipo, 240, 150, LARGO, ANCHO, font2);
-        frameEvento.add(inscripcionTipo);
+        JComboBox<String> metodoPago = new JComboBox(tipo);
+        setBonsJComboBox(metodoPago, 240, 200, LARGO, ANCHO, font2);
+        frameEvento.add(metodoPago);
 
         JButton enviarFormularioJButton = new JButton("Enviar Formulario");
         setBonsJButton(enviarFormularioJButton, 25, 250, (LARGO + 50), ANCHO, font1);
@@ -110,17 +123,19 @@ public class InscripcionJFrame extends FrameBase {
             try {
                 String email = (String) emailParticipante.getSelectedItem();
                 String codigo = (String) codigoEvento.getSelectedItem();
-                String tipoI = (String) inscripcionTipo.getSelectedItem();
+                String metodo = (String) metodoPago.getSelectedItem();
+                BigDecimal cantidad1 = new BigDecimal(jspinnerCantidad.getValue().toString());
 
-                if (!email.equals("Seleccione correo...") && !tipoI.equals("Seleccionar")
-                        && !codigo.equals("Seleccione codigo...")) {
+                if (!email.equals("Seleccione correo...") && cantidad1.compareTo(BigDecimal.ZERO) > 0
+                        && !codigo.equals("Seleccione codigo...") && !metodo.equals("Seleccionar")) {
 
-                    controlador.insetarFormularioInscripcion(email, codigo, tipoI);
+                    controlador.insetarFormularioPago(email, codigo, metodo, cantidad1);
                     JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Inscripción registrada Exitosamente.</p></html>");
 
                     emailParticipante.setSelectedIndex(0);
                     codigoEvento.setSelectedIndex(0);
-                    inscripcionTipo.setSelectedIndex(0);
+                    metodoPago.setSelectedIndex(0);
+                    jspinnerCantidad.setValue(0);
                 } else {
                     JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">Erro: todo los campos son obligatorios.</p></html>");
                 }
@@ -146,6 +161,11 @@ public class InscripcionJFrame extends FrameBase {
     private void setBonsJComboBox(JComboBox<String> jcombobox, int x, int y, int z, int w, Font font) {
         jcombobox.setBounds(x, y, z, w);
         jcombobox.setFont(font);
+    }
+    
+    private void setBonsJSpinner(JSpinner jspinner, int x, int y, int z, int w, Font font) {
+        jspinner.setBounds(x, y, z, w);
+        jspinner.setFont(font);
     }
 
 }

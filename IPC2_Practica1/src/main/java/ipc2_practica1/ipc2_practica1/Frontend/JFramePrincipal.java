@@ -126,6 +126,10 @@ public class JFramePrincipal extends JFrame {
             inscripcionJ.agregarVentanillaEvento(escritorio, 80, 20);
         });
         
+        pago.addActionListener(e -> {
+            PagoJFrame pago1 = new PagoJFrame();
+            pago1.agregarVentanillaEvento(escritorio, 100, 20);
+        });
         repaint();
         setVisible(true);
     }

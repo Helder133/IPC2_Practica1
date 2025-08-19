@@ -8,6 +8,7 @@ import ipc2_practica1.ipc2_practica1.Frontend.CargaDeArchivoFrame;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -19,7 +20,8 @@ public class ControladorEntreBackendYFrontend {
     private final RegistrarEventoDAO eventoDAO = new RegistrarEventoDAO();
     private final RegistrarParticipanteDAO paricipanteDAO = new RegistrarParticipanteDAO();
     private final InscripcionDAO inscripcionDAO = new InscripcionDAO();
-
+    private final PagoDAO pagoDAO = new PagoDAO();
+    
     public void setCarga(CargaDeArchivoFrame carga) {
         this.carga = carga;
     }
@@ -74,11 +76,29 @@ public class ControladorEntreBackendYFrontend {
         }
     }
 
+    public void insetarFormularioPago(String emailParticipante, String codigoEvento, String metodoPago,
+        BigDecimal monto) throws SQLException {
+        try {
+            Pago pago = new Pago(emailParticipante, codigoEvento, metodoPago, monto);
+            pagoDAO.insetar(pago);
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
+    }
+
     public String[][] getParticipantes() throws SQLException {
         return paricipanteDAO.listar();
     }
 
     public String[][] getEventos() throws SQLException {
         return eventoDAO.listar();
+    }
+
+    public List<String> correoDesdeInscripcion() throws SQLException {
+        return inscripcionDAO.getCorreoParticipanteInscripcion();
+    }
+
+    public List<String> codigoEventoDesdeInscripcion() throws SQLException {
+        return inscripcionDAO.getCodigoEventoInscripcion();
     }
 }

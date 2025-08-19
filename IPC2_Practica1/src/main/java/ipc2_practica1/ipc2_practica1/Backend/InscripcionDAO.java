@@ -6,7 +6,10 @@ package ipc2_practica1.ipc2_practica1.Backend;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -26,11 +29,11 @@ public class InscripcionDAO implements CRUD<Inscripcion> {
             stmt.setString(1, entidad.getEmailParticipante());
             stmt.setString(2, entidad.getCodigoEvento());
             stmt.setString(3, entidad.getTipoInscripcion());
-            
+
             System.out.println("Ejecutando SQL: " + INSERT_INSCRIPCION);
             int filasAfectadas = stmt.executeUpdate();
             System.out.println("Filas insertadas: " + filasAfectadas);
-            
+
         } catch (SQLException e) {
             throw e;
         }
@@ -52,4 +55,34 @@ public class InscripcionDAO implements CRUD<Inscripcion> {
 
     }
 
+    public List<String> getCorreoParticipanteInscripcion() throws SQLException {
+        List<String> resultado = new LinkedList<>();
+        String query = "SELECT email_participante FROM inscripcion";
+        
+        try (Connection connetion = conexion.conexion(); PreparedStatement stmt = connetion.prepareStatement(query); ResultSet rs = stmt.executeQuery();) {
+
+            while (rs.next()) {
+                resultado.add(rs.getString("email_participante"));
+            }
+            return resultado;
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    public List<String> getCodigoEventoInscripcion() throws SQLException {
+        List<String> resultado = new LinkedList<>();
+        String query = "SELECT codigo_de_evento FROM inscripcion";
+        
+        try (Connection connetion = conexion.conexion(); PreparedStatement stmt = connetion.prepareStatement(query); ResultSet rs = stmt.executeQuery();) {
+
+            while (rs.next()) {
+                resultado.add(rs.getString("codigo_de_evento"));
+            }
+            return resultado;
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+    
 }
