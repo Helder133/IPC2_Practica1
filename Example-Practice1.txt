@@ -2,10 +2,6 @@
 
 REGISTRO_EVENTO("EVT-00000001","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150,50.00);
 REGISTRO_EVENTO("EVT-00000002","26/08/2025","TALLER","Forja de Espadas","Sala Taller 1",50,120.00);
-REGISTRO_EVENTO("EVT-00000003","25/08/2025","CHARLAA","Tecnología Sheikah","Auditorio Central",150,50.00);
-REGISTRO_EVENTO("EVT-00000004","26/08/2025","TALLER","Forja de Espadas","Sala Taller 1",50f,120.00);
-REGISTRO_EVENTO("EVT-00000005","25/08/2025","CHARLA","Tecnología Sheikah","Auditorio Central",150,50.00f);
-REGISTRO_EVENTO("EVT-00000006","26/08/2025","TALLER","Forja de Espadas","Sala Taller 1",50,120.00);
 
 REGISTRO_PARTICIPANTE("Zelda Hyrule","ESTUDIANTE","Universidad de Hyrule","zelda@hyrule.edu");
 REGISTRO_PARTICIPANTE("Link Hyrule","PROFESIONAL","Triforce Software","link@hyrule.com");
@@ -15,8 +11,6 @@ REGISTRO_PARTICIPANTE("Mipha Zora","PROFESIONAL","Zora Clinic","mipha@zora.net")
 REGISTRO_PARTICIPANTE("Urbosa Gerudo","PROFESIONAL","Gerudo Council","urbosa@gerudo.gov");
 
 INSCRIPCION("zelda@hyrule.edu","EVT-00000001","ASISTENTE");
-INSCRIPCION("zelda@hyrule.edu","EVT-0000001","ASISTENTE");
-INSCRIPCION("zelda@hyrule.edu","EVT-00000001","aASISTENTE");
 INSCRIPCION("link@hyrule.com","EVT-00000001","CONFERENCISTA");
 INSCRIPCION("impa@kakariko.org","EVT-00000001","ASISTENTE");
 INSCRIPCION("daruk@goron.co","EVT-00000001","ASISTENTE");

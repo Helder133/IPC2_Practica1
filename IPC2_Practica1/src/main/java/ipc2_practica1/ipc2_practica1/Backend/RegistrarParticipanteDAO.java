@@ -21,7 +21,7 @@ public class RegistrarParticipanteDAO implements CRUD<RegistrarParticipante> {
             + " (nombre, tipo_de_participante, institucion_de_procedencia, email) "
             + " values (?,?,?,?);";
     private final ConexionBD conexion = new ConexionBD();
-    
+
     @Override
     public void insetar(RegistrarParticipante participante) throws SQLException {
 
@@ -47,42 +47,59 @@ public class RegistrarParticipanteDAO implements CRUD<RegistrarParticipante> {
 
     @Override
     public String[][] listar() throws SQLException {
-        List<String[]> resultado = new ArrayList<>(); 
+        List<String[]> resultado = new ArrayList<>();
         String query = "SELECT nombre, email FROM participante";
-        try (Connection connetion = conexion.conexion();
-                PreparedStatement stmt = connetion.prepareStatement(query); 
-                ResultSet rs = stmt.executeQuery();){
-            
-            while(rs.next()) {
-                String[] fila = new String [2];
+        try (Connection connetion = conexion.conexion(); PreparedStatement stmt = connetion.prepareStatement(query); ResultSet rs = stmt.executeQuery();) {
+
+            while (rs.next()) {
+                String[] fila = new String[2];
                 fila[0] = rs.getString("nombre");
                 fila[1] = rs.getString("email");
                 resultado.add(fila);
             }
-            
+
         } catch (SQLException e) {
             throw e;
         }
         return resultado.toArray(new String[0][0]);
     }
-    
-    public List<String> listaParticipantesEmail() throws SQLException {
+
+    public List<String> listaParticipantesDeEmail() throws SQLException {
         List<String> resultado = new ArrayList<>();
         String query = "SELECT email FROM participante";
-        try (Connection connetion = conexion.conexion();
-                PreparedStatement stmt = connetion.prepareStatement(query); 
-                ResultSet rs = stmt.executeQuery()){
-            
-            while(rs.next()) {
+        try (Connection connetion = conexion.conexion(); PreparedStatement stmt = connetion.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
                 resultado.add(rs.getString("email"));
             }
-            
+
         } catch (SQLException e) {
             throw e;
         }
         return resultado;
     }
-    
+
+    public RegistrarParticipante obtenerParticipanteEmail(String emailParticipante) throws SQLException {
+        String query = "SELECT * FROM participante WHERE email = ? ";
+        try (Connection connection = conexion.conexion(); PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, emailParticipante);
+
+            try (ResultSet rs = stmt.executeQuery();) {
+                if (rs.next()) {
+                    String nombre = rs.getString("nombre");
+                    String tipo = rs.getString("tipo_de_participante");
+                    String institucion = rs.getString("institucion_de_procedencia");
+                    String email = rs.getString("email");
+                    return new RegistrarParticipante(nombre, tipo, institucion, email);
+                } else {
+                    throw new SQLException("Error: Email del participante invalido: " + emailParticipante);
+                }
+            }
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
     @Override
     public void borrar() throws SQLException {
 

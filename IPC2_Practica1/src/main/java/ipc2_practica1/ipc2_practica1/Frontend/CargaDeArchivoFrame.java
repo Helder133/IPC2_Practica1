@@ -120,7 +120,7 @@ public class CargaDeArchivoFrame extends FrameBase {
             if (!rutaArchivo.getText().equalsIgnoreCase("Archivo Seleccionado...") && !rutaCarpeta.getText().equalsIgnoreCase("Carpeta Seleccionado...") && (int) jspinnerTiempo.getValue() > 0) {
                 try {
                     controlador.setCarga(this);
-                    controlador.insetarArchivo(archivoPath, (int) jspinnerTiempo.getValue());
+                    controlador.insetarArchivo(archivoPath, (int) jspinnerTiempo.getValue(), carpetaPath);
                 } catch (IOException ex) {
                     Logger.getLogger(CargaDeArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }

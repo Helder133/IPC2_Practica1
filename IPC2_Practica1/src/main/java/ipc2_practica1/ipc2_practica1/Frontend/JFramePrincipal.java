@@ -48,28 +48,28 @@ public class JFramePrincipal extends JFrame {
 
         Font menuFont = new Font("Helvetica", Font.BOLD, 14);
         Font menuItemFont = new Font("Helvetica", Font.PLAIN, 13);
-        
+
         // Menú "Carga de archivo"
         JMenu menuArchivo = new JMenu("Archivo");
         menuArchivo.setFont(menuFont);
         JMenuItem cargarArchivo = new JMenuItem("Cargar Archivo");
         cargarArchivo.setFont(menuItemFont);
-        
+
         menuArchivo.add(cargarArchivo);
-        
+
         // Menú "Registro"
-        JMenu menuRegistro = new JMenu("Registro"); 
+        JMenu menuRegistro = new JMenu("Registro");
         menuRegistro.setFont(menuFont);
-        
-        JMenuItem registrarEvento = new JMenuItem("Registrar Evento"); 
+
+        JMenuItem registrarEvento = new JMenuItem("Registrar Evento");
         registrarEvento.setFont(menuItemFont);
-        JMenuItem registrarParticipante = new JMenuItem("Registrar Participante"); 
+        JMenuItem registrarParticipante = new JMenuItem("Registrar Participante");
         registrarParticipante.setFont(menuItemFont);
-        JMenuItem registrarActividad = new JMenuItem("Registrar Actividad"); 
+        JMenuItem registrarActividad = new JMenuItem("Registrar Actividad");
         registrarActividad.setFont(menuItemFont);
-        JMenuItem registrarAsistencia = new JMenuItem("Registrar Asistencia"); 
+        JMenuItem registrarAsistencia = new JMenuItem("Registrar Asistencia");
         registrarAsistencia.setFont(menuItemFont);
-        
+
         menuRegistro.add(registrarEvento);
         menuRegistro.add(registrarParticipante);
         menuRegistro.add(registrarActividad);
@@ -84,7 +84,7 @@ public class JFramePrincipal extends JFrame {
         pago.setFont(menuItemFont);
         JMenuItem validarInscripcion = new JMenuItem("Validar Inscripción");
         validarInscripcion.setFont(menuItemFont);
-        
+
         menuOperaciones.add(inscripcion);
         menuOperaciones.add(pago);
         menuOperaciones.add(validarInscripcion);
@@ -99,56 +99,69 @@ public class JFramePrincipal extends JFrame {
         menuReportes.add(repActividad);
         menuReportes.add(repEvento);
 
+        JMenu menuCertificado = new JMenu("Certificado");
+        menuCertificado.setFont(menuFont);
+        JMenuItem generarCertificado = new JMenuItem("Generar Certificado");
+        generarCertificado.setFont(menuItemFont);
+
+        menuCertificado.add(generarCertificado);
+        
         // Agregar menús al menuBar
         menuBar.add(menuArchivo);
         menuBar.add(menuRegistro);
         menuBar.add(menuOperaciones);
         menuBar.add(menuReportes);
+        menuBar.add(menuCertificado);
 
         JDesktopPane escritorio = new JDesktopPane();
         escritorio.setBackground(Color.GRAY);
         add(escritorio, BorderLayout.CENTER);
-        
-        cargarArchivo.addActionListener( e -> {
+
+        cargarArchivo.addActionListener(e -> {
             CargaDeArchivoFrame carga = new CargaDeArchivoFrame();
             carga.CargaDeArchivoFrame(escritorio, 20, 20);
         });
-        
+
         registrarEvento.addActionListener(e -> {
             EventoFrame base = new EventoFrame();
             base.agregarVentanillaEvento(escritorio, 40, 20);
         });
-        
+
         registrarParticipante.addActionListener(e -> {
             ParticipanteJFrame participante = new ParticipanteJFrame();
             participante.agregarVentanillaEvento(escritorio, 60, 20);
         });
-        
+
         inscripcion.addActionListener(e -> {
             InscripcionJFrame inscripcionJ = new InscripcionJFrame();
             inscripcionJ.agregarVentanillaEvento(escritorio, 80, 20);
         });
-        
+
         pago.addActionListener(e -> {
             PagoJFrame pago1 = new PagoJFrame();
             pago1.agregarVentanillaEvento(escritorio, 100, 20);
         });
         repaint();
         setVisible(true);
-        
+
         validarInscripcion.addActionListener(e -> {
             ValidarPagoJFrame validarPago = new ValidarPagoJFrame();
             validarPago.agregarVentanillaEvento(escritorio, 120, 20);
         });
-        
-        registrarActividad.addActionListener(e->{
+
+        registrarActividad.addActionListener(e -> {
             ActividadJFrame actividad = new ActividadJFrame();
             actividad.agregarVentanillaEvento(escritorio, 140, 20);
         });
-        
+
         registrarAsistencia.addActionListener(e -> {
             AsistenciaJFrame asitencia = new AsistenciaJFrame();
             asitencia.agregarVentanillaEvento(escritorio, 160, 20);
+        });
+
+        generarCertificado.addActionListener(e -> {
+            CertificadoJFrame certificado = new CertificadoJFrame();
+            certificado.agregarVentanillaEvento(escritorio, 180, 20);
         });
     }
 }
