@@ -24,7 +24,11 @@ public class ControladorEntreBackendYFrontend {
     private final PagoDAO pagoDAO = new PagoDAO();
     private final RegistrarActividadDAO actividadDAO = new RegistrarActividadDAO();
     private final RegistrarAsistenciaDAO asistenciaDAO = new RegistrarAsistenciaDAO();
+    private static String paht;
 
+    public String getPaht() {
+        return paht;
+    }
     public void setCarga(CargaDeArchivoFrame carga) {
         this.carga = carga;
     }
@@ -43,10 +47,11 @@ public class ControladorEntreBackendYFrontend {
         }
     }
 
-    public void insetarArchivo(String path, int tiempo) throws IOException {
+    public void insetarArchivo(String path, int tiempo, String patchCarpeta) throws IOException {
+        this.paht = patchCarpeta;
         LecturaDeArchivos lectura = new LecturaDeArchivos();
         Thread hilo = new Thread(lectura);
-        lectura.setDatos(path, tiempo);
+        lectura.setDatos(path, tiempo, patchCarpeta);
         lectura.setCarga(carga);
         hilo.start();
     }
@@ -88,6 +93,16 @@ public class ControladorEntreBackendYFrontend {
             throw new SQLException(e);
         }
     }
+    
+    public void generarCertificado(String email, String codigo, String phat) throws Exception{
+        try {
+            Certificado certificado = new Certificado(email, codigo);
+            CertificadoDAO certificadoDAO = new CertificadoDAO();
+            certificadoDAO.genearCertifiacado(certificado, phat);
+        } catch (IOException | SQLException e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 
     public String[][] getParticipantes() throws SQLException {
         return participanteDAO.listar();
@@ -101,8 +116,12 @@ public class ControladorEntreBackendYFrontend {
         return actividadDAO.listaCodigoActividad();
     }
     
-    public List<String> listaParticipantesEmail() throws SQLException {
-        return participanteDAO.listaParticipantesEmail();
+    public List<String> listaParticipantesDeEmail() throws SQLException {
+        return participanteDAO.listaParticipantesDeEmail();
+    }
+    
+    public List<String> listaEventoDeCodigo() throws SQLException {
+        return eventoDAO.listaEventoDeCodigo();
     }
     
     public List<String> correoDesdeInscripcion() throws SQLException {

@@ -58,6 +58,30 @@ public class RegistrarEventoDAO implements CRUD<RegistrarEvento> {
 
     }
 
+    public RegistrarEvento obtenerEventoPorCodigo(String codigoEvento) throws SQLException {
+        String query = "SELECT * FROM evento WHERE codigo_de_evento = ? ";
+        try (Connection connection = conexion.conexion(); PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, codigoEvento);
+
+            try (ResultSet rs = stmt.executeQuery();) {
+                if (rs.next()) {
+                    String codigo = rs.getString("codigo_de_evento");
+                    String fecha = rs.getDate("fecha_del_evento").toLocalDate().toString();
+                    String tipo = rs.getString("tipo_de_evento");
+                    String titulo = rs.getString("titulo_de_evento");
+                    String ubicacion = rs.getString("ubicacion");
+                    int cupoMax = rs.getInt("cupo_maximo");
+                    BigDecimal consto = rs.getBigDecimal("costo_inscripcion");
+                    return new RegistrarEvento(codigo, fecha, tipo, titulo, ubicacion, cupoMax, consto);
+                } else {
+                    throw new SQLException("Error: Codigo de evento invalido " + codigoEvento);
+                }
+            }
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
     @Override
     public void actualizar(String[] entidad) throws SQLException {
 
@@ -102,5 +126,21 @@ public class RegistrarEventoDAO implements CRUD<RegistrarEvento> {
             throw e;
         }
         return null;
+    }
+    
+    public List<String> listaEventoDeCodigo() throws SQLException {
+        List<String> resultado = new ArrayList<>();
+        String query = "SELECT codigo_de_evento FROM evento";
+        try (Connection connetion = conexion.conexion(); PreparedStatement stmt = connetion.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                resultado.add(rs.getString("codigo_de_evento"));
+            }
+            
+            return resultado;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

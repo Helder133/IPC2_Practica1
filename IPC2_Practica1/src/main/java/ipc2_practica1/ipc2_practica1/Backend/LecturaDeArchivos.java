@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 public class LecturaDeArchivos implements Runnable {
 
     private String ruta1;
+    private String ruta2;
     private int tiempo;
     private CargaDeArchivoFrame carga;
 
@@ -93,7 +94,8 @@ public class LecturaDeArchivos implements Runnable {
                             Thread.sleep(tiempo);
                         }
                         case "CERTIFICADO" -> {
-                            carga.modificarMensaje(String.format("Falta logica %s", subLinea));
+                            String datos = extraerDatos(linea);
+                            genearCertificado(datos, fila);
                             Thread.sleep(tiempo);
                         }
                         case "REPORTE_PARTICIPANTES" -> {
@@ -137,9 +139,10 @@ public class LecturaDeArchivos implements Runnable {
         return "";
     }
 
-    public void setDatos(String ruta, int tiempo) {
+    public void setDatos(String ruta, int tiempo, String ruta2) {
         this.ruta1 = ruta;
         this.tiempo = tiempo;
+        this.ruta2 = ruta2;
     }
 
     @Override
@@ -315,7 +318,7 @@ public class LecturaDeArchivos implements Runnable {
             LocalTime horaInicio = LocalTime.parse(hora1, formatear);
             LocalTime horaFin = LocalTime.parse(hora2, formatear);
             int cupoMax = Integer.parseInt(partes[7].trim());
-            
+
             RegistrarActividad actividad = new RegistrarActividad(codigoActividad, codigoEvento, tipo, titulo, email, horaInicio, horaFin, cupoMax);
             RegistrarActividadDAO actividadDAO = new RegistrarActividadDAO();
             actividadDAO.insetar(actividad);
@@ -358,6 +361,32 @@ public class LecturaDeArchivos implements Runnable {
             } else {
                 carga.modificarMensaje("Error: " + e.getMessage());
             }
+        }
+    }
+
+    private void genearCertificado(String datos, int fila) {
+        String emailParticipante;
+        String codigoActividad;
+        try {
+            String[] partes = datos.split(",");
+
+            if (partes.length < 1) {
+                carga.modificarMensaje("fila " + fila + ": falta campo ");
+                return;
+            }
+            emailParticipante = partes[0].replace("\"", "").trim();
+            codigoActividad = partes[1].replace("\"", "").trim();
+
+            Certificado certificado = new Certificado(emailParticipante, codigoActividad);
+            CertificadoDAO certificadoDAO = new CertificadoDAO();
+            certificadoDAO.genearCertifiacado(certificado, ruta2);
+
+            String mensaje = String.format("Certificado generado correctamente, Guardado en la ruta: %s ", ruta2);
+            carga.modificarMensaje(mensaje);
+        } catch (SQLException e) {
+            carga.modificarMensaje("Error: " + e.getMessage());
+        } catch (IOException ex) {
+            carga.modificarMensaje("Error al generar al generar certificado");
         }
     }
 
