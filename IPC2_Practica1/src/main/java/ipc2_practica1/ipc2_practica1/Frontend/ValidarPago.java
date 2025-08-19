@@ -23,7 +23,7 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author helder
  */
-public class PagoJFrame extends FrameBase {
+public class ValidarPago extends FrameBase {
 
     private static final int LARGO = 200;
     private static final int ANCHO = 30;
@@ -31,7 +31,7 @@ public class PagoJFrame extends FrameBase {
     private final ControladorEntreBackendYFrontend controlador = new ControladorEntreBackendYFrontend();
 
     public void agregarVentanillaEvento(JDesktopPane jframe, int x, int y) {
-        String titulo = "Ventanilla de Pago";
+        String titulo = "Ventanilla de Validar Pago";
         frameEvento = agragarVentanilla(jframe, titulo, x, y);
         agregarComponentes();
     }
@@ -44,26 +44,13 @@ public class PagoJFrame extends FrameBase {
         setBonsJComboBox(emailParticipante, 10, 50, LARGO, ANCHO, font2);
         frameEvento.add(emailParticipante);
 
-        /*JLabel participanteEmail = new JLabel("Nombre de participante...");
-        setBonsJLabel(participanteEmail, 240, 50, LARGO, ANCHO, font1);
-        frameEvento.add(participanteEmail);*/
-
         List<String> participante;
         try {
-            participante = controlador.correoDesdeInscripcion();
+            participante = controlador.correoDesdePago();
             emailParticipante.addItem("Seleccione correo...");
             for (String participante1 : participante) {
                 emailParticipante.addItem(participante1);
             }
-
-            /*emailParticipante.addActionListener(e -> {
-                int index = emailParticipante.getSelectedIndex();
-                if (index > 0) {
-                    participanteEmail.setText(participante[index-1][0]);
-                } else {
-                    participanteEmail.setText("Nombre del participante...");
-                }
-            });*/
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">Erro: " + ex.getErrorCode() + ".</p></html>");
         }
@@ -72,70 +59,32 @@ public class PagoJFrame extends FrameBase {
         setBonsJComboBox(codigoEvento, 10, 100, LARGO, ANCHO, font2);
         frameEvento.add(codigoEvento);
 
-        /*JLabel tituloEvento = new JLabel("Titulo de evento...");
-        setBonsJLabel(tituloEvento, 240, 100, LARGO, ANCHO, font1);
-        frameEvento.add(tituloEvento);*/
-
         List<String> evento;
         try {
-            evento = controlador.codigoEventoDesdeInscripcion();
+            evento = controlador.codigoEventoDesdePago();
             codigoEvento.addItem("Seleccione codigo...");
             for (String evento1 : evento) {
                 codigoEvento.addItem(evento1);
             }
-
-            /*codigoEvento.addActionListener(ex -> {
-                int index = codigoEvento.getSelectedIndex();
-                if (index > 0) {
-                    tituloEvento.setText(evento[index-1][1]);
-                } else {
-                    tituloEvento.setText("Nombre del evento...");
-                }
-            });*/
-
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">Erro: " + e.getErrorCode() + ".</p></html>");
         }
-        
-        JLabel precio = new JLabel("Cantidad de pago: ");
-        setBonsJLabel(precio, 10, 150, LARGO, ANCHO, font1);
-        frameEvento.add(precio);
-        
-        SpinnerNumberModel cantidad = new SpinnerNumberModel(0, 0, 1000, 1);
-        JSpinner jspinnerCantidad = new JSpinner(cantidad);
-        setBonsJSpinner(jspinnerCantidad, 240, 150, LARGO, ANCHO, font2);
-        frameEvento.add(jspinnerCantidad);
-        
-        JLabel tipoInscripcion = new JLabel("Metodo de pago: ");
-        setBonsJLabel(tipoInscripcion, 10, 200, LARGO, ANCHO, font1);
-        frameEvento.add(tipoInscripcion);
-        
-        String[] tipo = {"Seleccionar", "EFECTIVO", "TRANSFERENCIA", "TARJETA"};
-
-        JComboBox<String> metodoPago = new JComboBox(tipo);
-        setBonsJComboBox(metodoPago, 240, 200, LARGO, ANCHO, font2);
-        frameEvento.add(metodoPago);
 
         JButton enviarFormularioJButton = new JButton("Enviar Formulario");
         setBonsJButton(enviarFormularioJButton, 25, 250, (LARGO + 50), ANCHO, font1);
         frameEvento.add(enviarFormularioJButton);
         enviarFormularioJButton.addActionListener(e -> {
             try {
-                String email = (String) emailParticipante.getSelectedItem();
-                String codigo = (String) codigoEvento.getSelectedItem();
-                String metodo = (String) metodoPago.getSelectedItem();
-                BigDecimal cantidad1 = new BigDecimal(jspinnerCantidad.getValue().toString());
+                String[] entidad = new String[2];
+                entidad[0] = (String) emailParticipante.getSelectedItem();
+                entidad[1] = (String) codigoEvento.getSelectedItem();
 
-                if (!email.equals("Seleccione correo...") && cantidad1.compareTo(BigDecimal.ZERO) > 0
-                        && !codigo.equals("Seleccione codigo...") && !metodo.equals("Seleccionar")) {
-
-                    controlador.insetarFormularioPago(email, codigo, metodo, cantidad1);
+                if (!entidad[0].equals("Seleccione correo...") && !entidad[1].equals("Seleccione codigo...") ) {
+                    controlador.validarPago(entidad);
                     JOptionPane.showMessageDialog(null, "<html><p style=\"color:green; font:20px; \">Inscripción registrada Exitosamente.</p></html>");
 
                     emailParticipante.setSelectedIndex(0);
                     codigoEvento.setSelectedIndex(0);
-                    metodoPago.setSelectedIndex(0);
-                    jspinnerCantidad.setValue(0);
                 } else {
                     JOptionPane.showMessageDialog(null, "<html><p style=\"color:red; font:20px; \">Erro: todo los campos son obligatorios.</p></html>");
                 }
@@ -153,19 +102,9 @@ public class PagoJFrame extends FrameBase {
         jbutton.setFont(font);
     }
 
-    private void setBonsJLabel(JLabel jlabel, int x, int y, int z, int w, Font font) {
-        jlabel.setBounds(x, y, z, w);
-        jlabel.setFont(font);
-    }
-
     private void setBonsJComboBox(JComboBox<String> jcombobox, int x, int y, int z, int w, Font font) {
         jcombobox.setBounds(x, y, z, w);
         jcombobox.setFont(font);
-    }
-    
-    private void setBonsJSpinner(JSpinner jspinner, int x, int y, int z, int w, Font font) {
-        jspinner.setBounds(x, y, z, w);
-        jspinner.setFont(font);
     }
 
 }

@@ -59,7 +59,7 @@ public class RegistrarEventoDAO implements CRUD<RegistrarEvento> {
     }
 
     @Override
-    public void actualizar(RegistrarEvento entidad) throws SQLException {
+    public void actualizar(String[] entidad) throws SQLException {
 
     }
 

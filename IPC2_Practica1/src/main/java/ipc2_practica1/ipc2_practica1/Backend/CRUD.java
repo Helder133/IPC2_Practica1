@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 public interface CRUD <T> {
     void insetar(T entidad) throws SQLException;
-    void actualizar(T entidad) throws SQLException;
+    void actualizar(String[] entidad) throws SQLException;
     String[][] listar() throws SQLException;
     void borrar () throws SQLException;
 }

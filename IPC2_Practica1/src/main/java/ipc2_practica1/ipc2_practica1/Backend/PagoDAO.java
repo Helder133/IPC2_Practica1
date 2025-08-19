@@ -6,7 +6,10 @@ package ipc2_practica1.ipc2_practica1.Backend;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -43,7 +46,7 @@ public class PagoDAO implements CRUD<Pago> {
     }
 
     @Override
-    public void actualizar(Pago entidad) throws SQLException {
+    public void actualizar(String[] entidad) throws SQLException {
 
     }
 
@@ -56,5 +59,35 @@ public class PagoDAO implements CRUD<Pago> {
     public void borrar() throws SQLException {
 
     }
+    
+    public List<String> getCorreoParticipantePagar() throws SQLException {
+        List<String> resultado = new LinkedList<>();
+        String query = "SELECT email_participante FROM pagar";
 
+        try (Connection connetion = conexion.conexion(); PreparedStatement stmt = connetion.prepareStatement(query); ResultSet rs = stmt.executeQuery();) {
+
+            while (rs.next()) {
+                resultado.add(rs.getString("email_participante"));
+            }
+            return resultado;
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    public List<String> getCodigoEventoPagar() throws SQLException {
+        List<String> resultado = new LinkedList<>();
+        String query = "SELECT codigo_de_evento FROM pagar";
+
+        try (Connection connetion = conexion.conexion(); PreparedStatement stmt = connetion.prepareStatement(query); ResultSet rs = stmt.executeQuery();) {
+
+            while (rs.next()) {
+                resultado.add(rs.getString("codigo_de_evento"));
+            }
+            return resultado;
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+    
 }

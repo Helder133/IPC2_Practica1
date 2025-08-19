@@ -41,7 +41,7 @@ public class RegistrarParticipanteDAO implements CRUD<RegistrarParticipante> {
     }
 
     @Override
-    public void actualizar(RegistrarParticipante entidad) throws SQLException {
+    public void actualizar(String[] entidad) throws SQLException {
 
     }
 
