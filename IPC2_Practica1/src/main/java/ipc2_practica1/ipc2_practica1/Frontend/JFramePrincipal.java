@@ -25,7 +25,6 @@ public class JFramePrincipal extends JFrame {
     public void inicio() {
         setTitle("Administrador de eventos");
         setLayout(new BorderLayout());
-        setVisible(true);
         setResizable(false);
         getContentPane().setBackground(Color.DARK_GRAY);
         setDefaultCloseOperation(3);
@@ -110,9 +109,15 @@ public class JFramePrincipal extends JFrame {
         
         registrarEvento.addActionListener(e -> {
             EventoFrame base = new EventoFrame();
-            base.agregarVentanillaEvento(escritorio, 20, 20);
+            base.agregarVentanillaEvento(escritorio, 40, 20);
+        });
+        
+        registrarParticipante.addActionListener(e -> {
+            ParticipanteJFrame participante = new ParticipanteJFrame();
+            participante.agregarVentanillaEvento(escritorio, 60, 20);
         });
         
         repaint();
+        setVisible(true);
     }
 }

@@ -4,6 +4,7 @@
 package ipc2_practica1.ipc2_practica1;
 
 import ipc2_practica1.ipc2_practica1.Frontend.JFramePrincipal;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -12,9 +13,11 @@ import ipc2_practica1.ipc2_practica1.Frontend.JFramePrincipal;
 public class IPC2_Practica1 {
 
     public static void main(String[] args) {
-        
-            JFramePrincipal JFrame = new JFramePrincipal();
-            JFrame.inicio();
+
+        SwingUtilities.invokeLater(() -> {
+            JFramePrincipal frame = new JFramePrincipal();
+            frame.inicio(); // tu método de inicialización
+        });
     }
 
 }

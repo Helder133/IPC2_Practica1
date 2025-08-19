@@ -14,12 +14,13 @@ import java.sql.SQLException;
  * @author helder
  */
 public class ControladorEntreBackendYFrontend {
+
     private CargaDeArchivoFrame carga;
 
     public void setCarga(CargaDeArchivoFrame carga) {
         this.carga = carga;
     }
-    
+
     public void insetarFormularioEvento(String codigo, String fecha,
             String tipo, String titulo, String ubicacion, int max, BigDecimal costo) throws SQLException {
         try {
@@ -29,18 +30,32 @@ public class ControladorEntreBackendYFrontend {
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 throw new SQLException("El codigo del evento ya existe");
-            }else {
+            } else {
                 throw new SQLException("Error: " + e.getMessage());
             }
         }
     }
-    
-    public void insetarArchivo (String path, int tiempo) throws IOException {
+
+    public void insetarArchivo(String path, int tiempo) throws IOException {
         LecturaDeArchivos lectura = new LecturaDeArchivos();
         Thread hilo = new Thread(lectura);
         lectura.setDatos(path, tiempo);
         lectura.setCarga(carga);
         hilo.start();
-    } 
-    
+    }
+
+    public void insetarFormularioParticipante(String nombre, String tipo,
+            String institucion, String email) throws SQLException {
+        try {
+            RegistrarParticipante participante = new RegistrarParticipante(nombre, tipo, institucion, email);
+            RegistrarParticipanteDAO paricipanteDAO = new RegistrarParticipanteDAO();
+            paricipanteDAO.insetar(participante);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                throw new SQLException("El emial del participante ya existe");
+            } else {
+                throw new SQLException("Error: " + e.getMessage());
+            }
+        }
+    }
 }
