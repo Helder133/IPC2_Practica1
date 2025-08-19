@@ -67,10 +67,13 @@ public class JFramePrincipal extends JFrame {
         registrarParticipante.setFont(menuItemFont);
         JMenuItem registrarActividad = new JMenuItem("Registrar Actividad"); 
         registrarActividad.setFont(menuItemFont);
-
+        JMenuItem registrarAsistencia = new JMenuItem("Registrar Asistencia"); 
+        registrarAsistencia.setFont(menuItemFont);
+        
         menuRegistro.add(registrarEvento);
         menuRegistro.add(registrarParticipante);
         menuRegistro.add(registrarActividad);
+        menuRegistro.add(registrarAsistencia);
 
         // Menú "Operaciones"
         JMenu menuOperaciones = new JMenu("Operaciones");
@@ -141,6 +144,11 @@ public class JFramePrincipal extends JFrame {
         registrarActividad.addActionListener(e->{
             ActividadJFrame actividad = new ActividadJFrame();
             actividad.agregarVentanillaEvento(escritorio, 140, 20);
+        });
+        
+        registrarAsistencia.addActionListener(e -> {
+            AsistenciaJFrame asitencia = new AsistenciaJFrame();
+            asitencia.agregarVentanillaEvento(escritorio, 160, 20);
         });
     }
 }

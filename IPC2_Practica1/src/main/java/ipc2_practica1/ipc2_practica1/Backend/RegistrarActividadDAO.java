@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -59,6 +61,23 @@ public class RegistrarActividadDAO implements CRUD<RegistrarActividad> {
         }
     }
 
+    public List<String> listaCodigoActividad() throws SQLException {
+        List<String> resultado = new ArrayList<>();
+        String query = "SELECT codigo_de_actividad FROM actividad";
+        try (Connection connetion = conexion.conexion();
+                PreparedStatement stmt = connetion.prepareStatement(query); 
+                ResultSet rs = stmt.executeQuery()){
+            
+            while(rs.next()) {
+                resultado.add(rs.getString("codigo_de_actividad"));
+            }
+            
+        } catch (SQLException e) {
+            throw e;
+        }
+        return resultado;
+    }
+    
     @Override
     public void actualizar(String[] entidad) throws SQLException {
 

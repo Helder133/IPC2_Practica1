@@ -66,6 +66,23 @@ public class RegistrarParticipanteDAO implements CRUD<RegistrarParticipante> {
         return resultado.toArray(new String[0][0]);
     }
     
+    public List<String> listaParticipantesEmail() throws SQLException {
+        List<String> resultado = new ArrayList<>();
+        String query = "SELECT email FROM participante";
+        try (Connection connetion = conexion.conexion();
+                PreparedStatement stmt = connetion.prepareStatement(query); 
+                ResultSet rs = stmt.executeQuery()){
+            
+            while(rs.next()) {
+                resultado.add(rs.getString("email"));
+            }
+            
+        } catch (SQLException e) {
+            throw e;
+        }
+        return resultado;
+    }
+    
     @Override
     public void borrar() throws SQLException {
 

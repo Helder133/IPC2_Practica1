@@ -88,7 +88,8 @@ public class LecturaDeArchivos implements Runnable {
                             Thread.sleep(tiempo);
                         }
                         case "ASISTENCIA" -> {
-                            carga.modificarMensaje(String.format("Falta logica %s", subLinea));
+                            String datos = extraerDatos(linea);
+                            cargarAsistenciaBD(datos, fila);
                             Thread.sleep(tiempo);
                         }
                         case "CERTIFICADO" -> {
@@ -328,6 +329,34 @@ public class LecturaDeArchivos implements Runnable {
                 carga.modificarMensaje(String.format("Actividad '%s' ya existe", codigoActividad));
             } else {
                 carga.modificarMensaje(String.format("Error al intentar insetar '%s': Posiblemente esta registrado como asistente", codigoActividad));
+            }
+        }
+    }
+
+    private void cargarAsistenciaBD(String datos, int fila) {
+        String emailParticipante = null;
+        String codigoActividad = null;
+        try {
+            String[] partes = datos.split(",");
+
+            if (partes.length < 1) {
+                carga.modificarMensaje("fila " + fila + ": falta campo ");
+                return;
+            }
+            emailParticipante = partes[0].replace("\"", "").trim();
+            codigoActividad = partes[1].replace("\"", "").trim();
+
+            RegistrarAsistencia asistencia = new RegistrarAsistencia(emailParticipante, codigoActividad);
+            RegistrarAsistenciaDAO asistenciaDAO = new RegistrarAsistenciaDAO();
+            asistenciaDAO.insetar(asistencia);
+
+            String mensaje = String.format("Asitencia registrada correctamente: '%s' '%s'", emailParticipante, codigoActividad);
+            carga.modificarMensaje(mensaje);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                carga.modificarMensaje(String.format("Asistencia : '%s' , '%s', ya existe", emailParticipante, codigoActividad));
+            } else {
+                carga.modificarMensaje("Error: " + e.getMessage());
             }
         }
     }
