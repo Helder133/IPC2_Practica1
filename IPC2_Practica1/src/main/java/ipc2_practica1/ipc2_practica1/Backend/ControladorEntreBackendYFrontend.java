@@ -8,6 +8,7 @@ import ipc2_practica1.ipc2_practica1.Frontend.CargaDeArchivoFrame;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -21,7 +22,8 @@ public class ControladorEntreBackendYFrontend {
     private final RegistrarParticipanteDAO paricipanteDAO = new RegistrarParticipanteDAO();
     private final InscripcionDAO inscripcionDAO = new InscripcionDAO();
     private final PagoDAO pagoDAO = new PagoDAO();
-    
+    private final RegistrarActividadDAO actividadDAO = new RegistrarActividadDAO();
+
     public void setCarga(CargaDeArchivoFrame carga) {
         this.carga = carga;
     }
@@ -77,7 +79,7 @@ public class ControladorEntreBackendYFrontend {
     }
 
     public void insetarFormularioPago(String emailParticipante, String codigoEvento, String metodoPago,
-        BigDecimal monto) throws SQLException {
+            BigDecimal monto) throws SQLException {
         try {
             Pago pago = new Pago(emailParticipante, codigoEvento, metodoPago, monto);
             pagoDAO.insetar(pago);
@@ -101,7 +103,7 @@ public class ControladorEntreBackendYFrontend {
     public List<String> codigoEventoDesdeInscripcion() throws SQLException {
         return inscripcionDAO.getCodigoEventoInscripcion();
     }
-    
+
     public List<String> correoDesdePago() throws SQLException {
         return pagoDAO.getCorreoParticipantePagar();
     }
@@ -109,12 +111,26 @@ public class ControladorEntreBackendYFrontend {
     public List<String> codigoEventoDesdePago() throws SQLException {
         return pagoDAO.getCodigoEventoPagar();
     }
-    
-    public void validarPago(String[] entidad) throws SQLException{
+
+    public void validarPago(String[] entidad) throws SQLException {
         try {
             inscripcionDAO.actualizar(entidad);
         } catch (SQLException e) {
             throw new SQLException(e);
+        }
+    }
+
+    public void insetarFormularioActividad(String codigoActividad1, String codigoEvento1, String tipoActividad,
+            String tituloActividad, String email, LocalTime horaInicio, LocalTime horaFin1, int cupo) throws SQLException {
+        try {
+            RegistrarActividad actividad = new RegistrarActividad(codigoActividad1, codigoEvento1, tipoActividad, tituloActividad, email, horaInicio, horaFin1, cupo);
+            actividadDAO.insetar(actividad);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                throw new SQLException("El participante ya esta inscrito");
+            } else {
+                throw new SQLException("Error: " + e.getErrorCode());
+            }
         }
     }
 }

@@ -134,8 +134,13 @@ public class JFramePrincipal extends JFrame {
         setVisible(true);
         
         validarInscripcion.addActionListener(e -> {
-            ValidarPago validarPago = new ValidarPago();
+            ValidarPagoJFrame validarPago = new ValidarPagoJFrame();
             validarPago.agregarVentanillaEvento(escritorio, 120, 20);
+        });
+        
+        registrarActividad.addActionListener(e->{
+            ActividadJFrame actividad = new ActividadJFrame();
+            actividad.agregarVentanillaEvento(escritorio, 140, 20);
         });
     }
 }
