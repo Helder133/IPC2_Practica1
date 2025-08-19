@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +33,7 @@ public class LecturaDeArchivos implements Runnable {
     }
 
     private void leerArchivo() throws IOException, InterruptedException, SQLException {
-        int contador = 1;
+        int fila = 1;
 
         List<String> totalLineas = Files.readAllLines(Paths.get(ruta1));
         int total = totalLineas.size();
@@ -57,31 +59,32 @@ public class LecturaDeArchivos implements Runnable {
                     switch (subLinea) {
                         case "REGISTRO_EVENTO" -> {
                             String datos = extraerDatos(linea);
-                            cargarEventoBD(datos, contador);
+                            cargarEventoBD(datos, fila);
                             Thread.sleep(tiempo);
                         }
                         case "REGISTRO_PARTICIPANTE" -> {
                             String datos = extraerDatos(linea);
-                            cargarParticipanteBD(datos, contador);
+                            cargarParticipanteBD(datos, fila);
                             Thread.sleep(tiempo);
                         }
                         case "INSCRIPCION" -> {
                             String datos = extraerDatos(linea);
-                            cargarInscripcionBD(datos, contador);
+                            cargarInscripcionBD(datos, fila);
                             Thread.sleep(tiempo);
                         }
                         case "PAGO" -> {
                             String datos = extraerDatos(linea);
-                            cargarPagoBD(datos, contador);
+                            cargarPagoBD(datos, fila);
                             Thread.sleep(tiempo);
                         }
                         case "VALIDAR_INSCRIPCION" -> {
                             String datos = extraerDatos(linea);
-                            validarPago(datos, contador);
+                            validarPago(datos, fila);
                             Thread.sleep(tiempo);
                         }
                         case "REGISTRO_ACTIVIDAD" -> {
-                            carga.modificarMensaje(String.format("Falta logica %s", subLinea));
+                            String datos = extraerDatos(linea);
+                            cargarActividadBD(datos, fila);
                             Thread.sleep(tiempo);
                         }
                         case "ASISTENCIA" -> {
@@ -108,8 +111,8 @@ public class LecturaDeArchivos implements Runnable {
                             throw new AssertionError();
                     }
                 }
-                contador++;
-                int porcentaje = (int) ((contador * 100.0) / total);
+                fila++;
+                int porcentaje = (int) ((fila * 100.0) / total);
                 carga.setProgresoBarra(porcentaje);
 
             }
@@ -147,12 +150,12 @@ public class LecturaDeArchivos implements Runnable {
         }
     }
 
-    private void cargarEventoBD(String datos, int contador) throws SQLException {
+    private void cargarEventoBD(String datos, int fila) throws SQLException {
         String codigo = null;
         try {
             String[] partes = datos.split(",");
             if (partes.length < 6) {
-                carga.modificarMensaje("fila " + contador + ": falta campo ");
+                carga.modificarMensaje("fila " + fila + ": falta campo ");
                 return;
             }
             codigo = partes[0].replace("\"", "").trim();
@@ -284,11 +287,48 @@ public class LecturaDeArchivos implements Runnable {
             dato[1] = partes[1].replace("\"", "").trim();
             InscripcionDAO inscripcionDAO = new InscripcionDAO();
             inscripcionDAO.actualizar(dato);
-            
+
             String mensaje = String.format("Pago validado correctamente: '%s' '%s'", dato[0], dato[1]);
             carga.modificarMensaje(mensaje);
         } catch (SQLException e) {
             carga.modificarMensaje("Error: " + e.getMessage());
+        }
+    }
+
+    private void cargarActividadBD(String datos, int fila) {
+        DateTimeFormatter formatear = DateTimeFormatter.ofPattern("HH:mm");
+        String codigoActividad = null;
+        try {
+            String[] partes = datos.split(",");
+            if (partes.length < 7) {
+                carga.modificarMensaje("fila " + fila + ": falta campo ");
+                return;
+            }
+            codigoActividad = partes[0].replace("\"", "").trim();
+            String codigoEvento = partes[1].replace("\"", "").trim();
+            String tipo = partes[2].replace("\"", "").trim();
+            String titulo = partes[3].replace("\"", "").trim();
+            String email = partes[4].replace("\"", "").trim();
+            String hora1 = partes[5].replace("\"", "").trim();
+            String hora2 = partes[6].replace("\"", "").trim();
+            LocalTime horaInicio = LocalTime.parse(hora1, formatear);
+            LocalTime horaFin = LocalTime.parse(hora2, formatear);
+            int cupoMax = Integer.parseInt(partes[7].trim());
+            
+            RegistrarActividad actividad = new RegistrarActividad(codigoActividad, codigoEvento, tipo, titulo, email, horaInicio, horaFin, cupoMax);
+            RegistrarActividadDAO actividadDAO = new RegistrarActividadDAO();
+            actividadDAO.insetar(actividad);
+
+            String mensaje = String.format("Actividad '%s' cargado", codigoActividad);
+            carga.modificarMensaje(mensaje);
+        } catch (NumberFormatException e) {
+            carga.modificarMensaje(String.format("Error al tratar de leer Cupo de: '%s'", codigoActividad));
+        } catch (SQLException ex) {
+            if (ex.getErrorCode() == 1062) {
+                carga.modificarMensaje(String.format("Actividad '%s' ya existe", codigoActividad));
+            } else {
+                carga.modificarMensaje(String.format("Error al intentar insetar '%s': Posiblemente esta registrado como asistente", codigoActividad));
+            }
         }
     }
 

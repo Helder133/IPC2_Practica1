@@ -7,23 +7,19 @@ package ipc2_practica1.ipc2_practica1.Frontend;
 import ipc2_practica1.ipc2_practica1.Backend.ControladorEntreBackendYFrontend;
 import java.awt.Font;
 import java.awt.HeadlessException;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
 /**
  *
  * @author helder
  */
-public class ValidarPago extends FrameBase {
+public class ValidarPagoJFrame extends FrameBase {
 
     private static final int LARGO = 200;
     private static final int ANCHO = 30;

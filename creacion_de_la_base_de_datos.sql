@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS actividad (
 	email_participante VARCHAR (60) NOT NULL,
 	hora_de_inico TIME NOT NULL,
 	hora_de_fin TIME NOT NULL,
-	cupo_max INT NOT NULL,
+	cupo_max DECIMAL(7,2) NOT NULL,
 	CONSTRAINT fk_email_participante_2 FOREIGN KEY (email_participante) REFERENCES participante (email),
 	CONSTRAINT fk_codigo_de_evento_2 FOREIGN KEY (codigo_de_evento) REFERENCES evento (codigo_de_evento)
 );
