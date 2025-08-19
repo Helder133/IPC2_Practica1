@@ -5,7 +5,6 @@
 package ipc2_practica1.ipc2_practica1.Backend;
 
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  *
@@ -15,7 +14,6 @@ import java.util.List;
 public interface CRUD <T> {
     void insetar(T entidad) throws SQLException;
     void actualizar(T entidad) throws SQLException;
-    T leer () throws SQLException;
-    List<T> listar() throws SQLException;
+    String[][] listar() throws SQLException;
     void borrar () throws SQLException;
 }
