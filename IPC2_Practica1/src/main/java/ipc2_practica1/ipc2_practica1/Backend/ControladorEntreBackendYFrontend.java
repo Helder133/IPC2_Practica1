@@ -19,10 +19,11 @@ public class ControladorEntreBackendYFrontend {
 
     private CargaDeArchivoFrame carga;
     private final RegistrarEventoDAO eventoDAO = new RegistrarEventoDAO();
-    private final RegistrarParticipanteDAO paricipanteDAO = new RegistrarParticipanteDAO();
+    private final RegistrarParticipanteDAO participanteDAO = new RegistrarParticipanteDAO();
     private final InscripcionDAO inscripcionDAO = new InscripcionDAO();
     private final PagoDAO pagoDAO = new PagoDAO();
     private final RegistrarActividadDAO actividadDAO = new RegistrarActividadDAO();
+    private final RegistrarAsistenciaDAO asistenciaDAO = new RegistrarAsistenciaDAO();
 
     public void setCarga(CargaDeArchivoFrame carga) {
         this.carga = carga;
@@ -54,7 +55,7 @@ public class ControladorEntreBackendYFrontend {
             String institucion, String email) throws SQLException {
         try {
             RegistrarParticipante participante = new RegistrarParticipante(nombre, tipo, institucion, email);
-            paricipanteDAO.insetar(participante);
+            participanteDAO.insetar(participante);
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 throw new SQLException("El emial del participante ya existe");
@@ -89,13 +90,21 @@ public class ControladorEntreBackendYFrontend {
     }
 
     public String[][] getParticipantes() throws SQLException {
-        return paricipanteDAO.listar();
+        return participanteDAO.listar();
     }
 
     public String[][] getEventos() throws SQLException {
         return eventoDAO.listar();
     }
-
+    
+    public List<String> listaCodigoActividad() throws SQLException {
+        return actividadDAO.listaCodigoActividad();
+    }
+    
+    public List<String> listaParticipantesEmail() throws SQLException {
+        return participanteDAO.listaParticipantesEmail();
+    }
+    
     public List<String> correoDesdeInscripcion() throws SQLException {
         return inscripcionDAO.getCorreoParticipanteInscripcion();
     }
@@ -128,6 +137,19 @@ public class ControladorEntreBackendYFrontend {
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 throw new SQLException("El participante ya esta inscrito");
+            } else {
+                throw new SQLException("Error: " + e.getErrorCode());
+            }
+        }
+    }
+    
+    public void insetarFormularioAsistencia(String emailParticipante, String codigoActividad) throws SQLException {
+        try {
+            RegistrarAsistencia asistencia = new RegistrarAsistencia(emailParticipante, codigoActividad);
+            asistenciaDAO.insetar(asistencia);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                throw new SQLException("El participante ya tiene asisntecia");
             } else {
                 throw new SQLException("Error: " + e.getErrorCode());
             }
