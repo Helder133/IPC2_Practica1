@@ -16,6 +16,9 @@ import java.sql.SQLException;
 public class ControladorEntreBackendYFrontend {
 
     private CargaDeArchivoFrame carga;
+    private final RegistrarEventoDAO eventoDAO = new RegistrarEventoDAO();
+    private final RegistrarParticipanteDAO paricipanteDAO = new RegistrarParticipanteDAO();
+    private final InscripcionDAO inscripcionDAO = new InscripcionDAO();
 
     public void setCarga(CargaDeArchivoFrame carga) {
         this.carga = carga;
@@ -25,13 +28,12 @@ public class ControladorEntreBackendYFrontend {
             String tipo, String titulo, String ubicacion, int max, BigDecimal costo) throws SQLException {
         try {
             RegistrarEvento evento = new RegistrarEvento(codigo, fecha, tipo, titulo, ubicacion, max, costo);
-            RegistrarEventoDAO eventoDAO = new RegistrarEventoDAO();
             eventoDAO.insetar(evento);
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 throw new SQLException("El codigo del evento ya existe");
             } else {
-                throw new SQLException("Error: " + e.getMessage());
+                throw new SQLException("Error: " + e.getErrorCode());
             }
         }
     }
@@ -48,14 +50,35 @@ public class ControladorEntreBackendYFrontend {
             String institucion, String email) throws SQLException {
         try {
             RegistrarParticipante participante = new RegistrarParticipante(nombre, tipo, institucion, email);
-            RegistrarParticipanteDAO paricipanteDAO = new RegistrarParticipanteDAO();
             paricipanteDAO.insetar(participante);
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 throw new SQLException("El emial del participante ya existe");
             } else {
-                throw new SQLException("Error: " + e.getMessage());
+                throw new SQLException("Error: " + e.getErrorCode());
             }
         }
+    }
+
+    public void insetarFormularioInscripcion(String emailParticipante, String codigoEvento,
+            String tipoInscripcion) throws SQLException {
+        try {
+            Inscripcion inscripcion = new Inscripcion(emailParticipante, codigoEvento, tipoInscripcion);
+            inscripcionDAO.insetar(inscripcion);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                throw new SQLException("El participante ya esta inscrito");
+            } else {
+                throw new SQLException("Error: " + e.getErrorCode());
+            }
+        }
+    }
+
+    public String[][] getParticipantes() throws SQLException {
+        return paricipanteDAO.listar();
+    }
+
+    public String[][] getEventos() throws SQLException {
+        return eventoDAO.listar();
     }
 }

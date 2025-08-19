@@ -66,7 +66,8 @@ public class LecturaDeArchivos implements Runnable {
                             Thread.sleep(tiempo);
                         }
                         case "INSCRIPCION" -> {
-                            carga.modificarMensaje(String.format("Falta logica %s", subLinea));
+                            String datos = extraerDatos(linea);
+                            cargarInscripcionBD(datos, contador);
                             Thread.sleep(tiempo);
                         }
                         case "PAGO" -> {
@@ -203,6 +204,36 @@ public class LecturaDeArchivos implements Runnable {
                 carga.modificarMensaje(String.format("Paticipante con correo: '%s' ya existe", email));
             } else {
                 carga.modificarMensaje(String.format("Error al intentar insetar participante con correo: '%s': ", email));
+            }
+        }
+    }
+
+    private void cargarInscripcionBD(String datos, int fila) {
+        String emailParticipante = null;
+        String codigoEvento = null;
+        try {
+
+            String[] partes = datos.split(",");
+
+            if (partes.length < 2) {
+                carga.modificarMensaje("fila " + fila + ": falta campo ");
+                return;
+            }
+            emailParticipante = partes[0].replace("\"", "").trim();
+            codigoEvento = partes[1].replace("\"", "").trim();
+            String tipoInscripcion = partes[2].replace("\"", "").trim();
+
+            Inscripcion inscripcion = new Inscripcion(emailParticipante, codigoEvento, tipoInscripcion);
+            InscripcionDAO inscripcionDAO = new InscripcionDAO();
+            inscripcionDAO.insetar(inscripcion);
+
+            String mensaje = String.format("Incripcion registrada correctamente: '%s' '%s'", emailParticipante, codigoEvento );
+            carga.modificarMensaje(mensaje);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                carga.modificarMensaje(String.format("La inscripcion de : '%s' , '%s', ya existe", emailParticipante, codigoEvento));
+            } else {
+                carga.modificarMensaje("Error: " + e.getMessage());
             }
         }
     }
